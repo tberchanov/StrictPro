@@ -8,10 +8,9 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
 import com.strictpro.penalty.ViolationPenalty
 
-private const val TAG = "FlashScreenPenaltyExecutor"
+private const val TAG = "FlashPenaltyExecutor"
 private const val FLASH_DELAY = 100L
 private const val FLASH_COLOR = android.R.color.holo_red_dark
 
@@ -29,10 +28,7 @@ internal class FlashScreenPenaltyExecutor : PenaltyExecutor {
     private fun flashScreen(activity: Activity) {
         val flashView = View(activity)
         flashView.setBackgroundColor(
-            ContextCompat.getColor(
-                activity,
-                FLASH_COLOR
-            )
+            activity.resources.getColor(FLASH_COLOR)
         )
         activity.addContentView(
             flashView,

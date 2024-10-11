@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.strictpro.R
 import com.strictpro.penalty.ViolationPenalty
 import com.strictpro.utils.Base64Util
+import com.strictpro.utils.stackTraceToStringCompat
 
 private const val TAG = "DialogPenaltyExecutor"
 
@@ -30,13 +31,13 @@ internal class DialogPenaltyExecutor : PenaltyExecutor {
                 findViewById<Button>(R.id.btn_copy_base64).setOnClickListener {
                     copyToClipboard(
                         it.context,
-                        Base64Util.encodeToString(violation.stackTraceToString()),
+                        Base64Util.encodeToString(violation.stackTraceToStringCompat()),
                     )
                 }
                 findViewById<Button>(R.id.btn_copy_stack).setOnClickListener {
                     copyToClipboard(
                         it.context,
-                        violation.stackTraceToString(),
+                        violation.stackTraceToStringCompat(),
                     )
                 }
                 show()
@@ -47,7 +48,7 @@ internal class DialogPenaltyExecutor : PenaltyExecutor {
     }
 
     private fun copyToClipboard(context: Context, text: String) {
-        val clipboard = context.getSystemService(ClipboardManager::class.java)
+        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("label", text)
         clipboard.setPrimaryClip(clip)
     }

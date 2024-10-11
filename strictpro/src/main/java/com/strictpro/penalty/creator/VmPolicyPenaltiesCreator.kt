@@ -1,25 +1,20 @@
 package com.strictpro.penalty.creator
 
-import android.os.strictmode.CleartextNetworkViolation
-import android.os.strictmode.FileUriExposedViolation
+import android.os.Build
 import android.os.strictmode.Violation
+import androidx.annotation.RequiresApi
 import com.strictpro.StrictPro
 import com.strictpro.penalty.ViolationPenalty
+import com.strictpro.utils.shouldDeathOnCleartextNetwork
+import com.strictpro.utils.shouldDeathOnFileUriExposure
 
 object VmPolicyPenaltiesCreator {
+    @RequiresApi(Build.VERSION_CODES.P)
     fun create(vmPolicy: StrictPro.VmPolicy, violation: Violation): Set<ViolationPenalty> {
         val penalties = vmPolicy.getPenalties().toMutableSet()
-        fun shouldDeathOnCleartextNetwork(): Boolean {
-            return penalties.contains(ViolationPenalty.DeathOnCleartextNetwork) &&
-                    violation is CleartextNetworkViolation
-        }
-
-        fun shouldDeathOnFileUriExposure(): Boolean {
-            return penalties.contains(ViolationPenalty.DeathOnFileUriExposure) &&
-                    violation is FileUriExposedViolation
-        }
-
-        if (shouldDeathOnFileUriExposure() || shouldDeathOnCleartextNetwork()) {
+        if (penalties.shouldDeathOnFileUriExposure(violation) ||
+            penalties.shouldDeathOnCleartextNetwork(violation)
+        ) {
             penalties.add(ViolationPenalty.Death)
         }
 

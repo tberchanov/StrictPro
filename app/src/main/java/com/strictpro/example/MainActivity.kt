@@ -29,6 +29,9 @@ import com.strictpro.StrictPro
 import com.strictpro.example.ui.theme.StrictProTheme
 import java.io.File
 import java.io.FileOutputStream
+import java.io.*
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainActivity : ComponentActivity() {
 
@@ -114,11 +117,30 @@ class MainActivity : ComponentActivity() {
                                 }) {
                                     Text("Trigger LeakedClosableViolation")
                                 }
+                                Button(onClick = {
+                                    performNetworkOperation()
+                                }) {
+                                    Text("Trigger NetworkViolation")
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun performNetworkOperation() {
+        try {
+            val url = URL("https://www.example.com")
+            val urlConnection = url.openConnection() as HttpURLConnection
+            try {
+                BufferedInputStream(urlConnection.inputStream).close()
+            } finally {
+                urlConnection.disconnect()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
@@ -129,6 +151,9 @@ class MainActivity : ComponentActivity() {
                 .penaltyLog()
                 .penaltyDialog()
                 .penaltyFlashScreen()
+                .setWhiteList {
+                    detectAppViolationsOnly(this@MainActivity)
+                }
                 .build()
         )
     }
@@ -140,6 +165,9 @@ class MainActivity : ComponentActivity() {
                 .penaltyLog()
                 .penaltyDialog()
                 .penaltyFlashScreen()
+                .setWhiteList {
+                    detectAppViolationsOnly(this@MainActivity)
+                }
                 .build()
         )
     }

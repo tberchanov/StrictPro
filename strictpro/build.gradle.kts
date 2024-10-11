@@ -9,7 +9,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 28
+        minSdk = 21
 
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -34,9 +34,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.startup.runtime)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(libs.androidx.annotation)
 }
 
 afterEvaluate {
@@ -46,7 +44,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "com.github.tberchanov"
                 artifactId = "strictpro"
-                version = "0.0.1"
+                version = "0.0.2"
             }
         }
     }

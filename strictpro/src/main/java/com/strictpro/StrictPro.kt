@@ -54,7 +54,7 @@ object StrictPro {
         )
     )
 
-    class ThreadPolicy {
+    class ThreadPolicy internal constructor() {
 
         internal var detectAll = false
         internal var detectExplicitGc = false
@@ -201,6 +201,7 @@ object StrictPro {
                 return this
             }
 
+            // Whitelist works only from API 28
             fun setWhiteList(whiteListBlock: ViolationWhiteList.() -> Unit): Builder {
                 threadPolicy.violationWhiteList.whiteListBlock()
                 return this
@@ -220,7 +221,7 @@ object StrictPro {
         ThreadPolicySetter.set(policy)
     }
 
-    class VmPolicy {
+    class VmPolicy internal constructor() {
 
         internal var detectAll = false
         internal var detectActivityLeaks = false
@@ -380,6 +381,7 @@ object StrictPro {
                 return this
             }
 
+            // Whitelist works only from API 28
             fun setWhiteList(whiteListBlock: ViolationWhiteList.() -> Unit): Builder {
                 vmPolicy.violationWhiteList.whiteListBlock()
                 return this

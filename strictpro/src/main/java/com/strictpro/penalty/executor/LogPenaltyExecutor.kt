@@ -1,6 +1,7 @@
 package com.strictpro.penalty.executor
 
 import android.app.Activity
+import android.os.Build
 import android.os.strictmode.Violation
 import android.util.Log
 import com.strictpro.penalty.ViolationPenalty
@@ -10,6 +11,10 @@ internal class LogPenaltyExecutor : PenaltyExecutor {
     override fun executablePenalty() = ViolationPenalty.Log
 
     override fun executePenalty(violation: Violation, currentActivity: Activity?) {
-        Log.d(LIB_TAG, "Policy violation: ", violation)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            Log.d(LIB_TAG, "Policy violation: ", violation)
+        } else {
+            Log.d(LIB_TAG, "Policy violation: $violation")
+        }
     }
 }

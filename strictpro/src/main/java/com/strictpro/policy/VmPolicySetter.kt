@@ -5,6 +5,11 @@ import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
 import com.strictpro.StrictPro
 import com.strictpro.penalty.ViolationPenalty
+import com.strictpro.penalty.ViolationPenalty.Death
+import com.strictpro.penalty.ViolationPenalty.DeathOnCleartextNetwork
+import com.strictpro.penalty.ViolationPenalty.DeathOnFileUriExposure
+import com.strictpro.penalty.ViolationPenalty.DropBox
+import com.strictpro.penalty.ViolationPenalty.Log
 import com.strictpro.penalty.creator.VmPolicyPenaltiesCreator
 import com.strictpro.utils.MainThreadExecutor
 import com.strictpro.utils.UnsupportedLogger
@@ -16,10 +21,46 @@ internal object VmPolicySetter {
         val androidPolicy = VmPolicy.Builder()
             .doIf(policy.detectAll) { detectAll() }
             .doIf(policy.detectActivityLeaks) { detectActivityLeaks() }
-            .doIf(policy.detectUntaggedSockets) { detectUntaggedSockets() }
-            .doIf(policy.detectCleartextNetwork) { detectCleartextNetwork() }
-            .doIf(policy.detectNonSdkApiUsage) { detectNonSdkApiUsage() }
-            .doIf(policy.detectContentUriWithoutPermission) { detectContentUriWithoutPermission() }
+            .doIf(policy.detectUntaggedSockets) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    detectUntaggedSockets()
+                } else {
+                    UnsupportedLogger.logUnsupportedFeature(
+                        StrictPro.VmPolicy.CATEGORY,
+                        "detectUntaggedSockets"
+                    )
+                }
+            }
+            .doIf(policy.detectCleartextNetwork) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    detectCleartextNetwork()
+                } else {
+                    UnsupportedLogger.logUnsupportedFeature(
+                        StrictPro.VmPolicy.CATEGORY,
+                        "detectCleartextNetwork"
+                    )
+                }
+            }
+            .doIf(policy.detectNonSdkApiUsage) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    detectNonSdkApiUsage()
+                } else {
+                    UnsupportedLogger.logUnsupportedFeature(
+                        StrictPro.VmPolicy.CATEGORY,
+                        "detectNonSdkApiUsage"
+                    )
+                }
+            }
+            .doIf(policy.detectContentUriWithoutPermission) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    detectContentUriWithoutPermission()
+                } else {
+                    UnsupportedLogger.logUnsupportedFeature(
+                        StrictPro.VmPolicy.CATEGORY,
+                        "detectContentUriWithoutPermission"
+                    )
+                }
+            }
             .doIf(policy.detectImplicitDirectBoot) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     detectImplicitDirectBoot()
@@ -65,28 +106,64 @@ internal object VmPolicySetter {
             }
             .doIf(policy.detectLeakedSqlLiteObjects) { detectLeakedSqlLiteObjects() }
             .apply {
-                policy.getPenaltyListeners().forEach { (executor, listener) ->
-                    penaltyListener(executor, listener)
-                }
+                UnsupportedLogger.logUnsupportedFeature(
+                    StrictPro.VmPolicy.CATEGORY,
+                    "penaltyListener"
+                )
             }
             .apply {
                 policy.getClassInstanceLimits().forEach { (clazz, limit) ->
                     setClassInstanceLimit(clazz, limit)
                 }
             }
-            .penaltyListener(MainThreadExecutor()) { violation ->
-                val whiteListPenalties = policy.violationWhiteList.getWhiteListPenalties(violation)
-                if (whiteListPenalties.isEmpty()) {
-                    val policyPenalties = VmPolicyPenaltiesCreator.create(policy, violation)
-                    StrictPro.penaltyExecutor.execute(
-                        violation, policyPenalties, StrictPro.currentActivityRef.get()
-                    )
-                } else if (whiteListPenalties.contains(ViolationPenalty.Ignore)) {
-                    // noop
+            .apply {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    penaltyListener(MainThreadExecutor()) { violation ->
+                        val whiteListPenalties =
+                            policy.violationWhiteList.getWhiteListPenalties(violation)
+                        if (whiteListPenalties.isEmpty()) {
+                            val policyPenalties =
+                                VmPolicyPenaltiesCreator.create(policy, violation)
+                            StrictPro.penaltyExecutor.execute(
+                                violation, policyPenalties, StrictPro.currentActivityRef.get()
+                            )
+                        } else if (whiteListPenalties.contains(ViolationPenalty.Ignore)) {
+                            // noop
+                        } else {
+                            StrictPro.penaltyExecutor.execute(
+                                violation, whiteListPenalties, StrictPro.currentActivityRef.get()
+                            )
+                        }
+                    }
                 } else {
-                    StrictPro.penaltyExecutor.execute(
-                        violation, whiteListPenalties, StrictPro.currentActivityRef.get()
+                    UnsupportedLogger.logUnsupportedFeature(
+                        StrictPro.VmPolicy.CATEGORY,
+                        "setWhiteList"
                     )
+                    val penalties = policy.getPenalties()
+                    doIf(penalties.contains(Log)) { penaltyLog() }
+                    doIf(penalties.contains(Death)) { penaltyDeath() }
+                    doIf(penalties.contains(DropBox)) { penaltyDropBox() }
+                    doIf(penalties.contains(DeathOnFileUriExposure)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            penaltyDeathOnFileUriExposure()
+                        } else {
+                            UnsupportedLogger.logUnsupportedFeature(
+                                StrictPro.VmPolicy.CATEGORY,
+                                "penaltyDeathOnFileUriExposure"
+                            )
+                        }
+                    }
+                    doIf(penalties.contains(DeathOnCleartextNetwork)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            penaltyDeathOnCleartextNetwork()
+                        } else {
+                            UnsupportedLogger.logUnsupportedFeature(
+                                StrictPro.VmPolicy.CATEGORY,
+                                "penaltyDeathOnCleartextNetwork"
+                            )
+                        }
+                    }
                 }
             }
             .build()
