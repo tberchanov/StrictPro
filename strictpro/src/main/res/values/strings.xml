@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ok">OK</string>
+    <string name="copy_base64">Copy Base64</string>
+    <string name="copy_stack">Copy Stack</string>
+    <string name="strictmode_violation_detected">StrictMode Violation Detected</string>
+</resources>
