@@ -5,7 +5,7 @@ import java.util.Locale
 
 private const val FEATURE_NOT_SUPPORTED_MSG = "%s:%s is not supported"
 
-object UnsupportedLogger {
+internal object UnsupportedLogger {
 
     fun logUnsupportedFeature(category: String, feature: String) {
         Log.d(

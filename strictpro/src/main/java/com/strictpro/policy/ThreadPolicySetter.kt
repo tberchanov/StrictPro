@@ -1,8 +1,8 @@
 package com.strictpro.policy
 
 import android.os.Build
+import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
-import android.os.StrictMode.setThreadPolicy
 import com.strictpro.StrictPro
 import com.strictpro.penalty.ViolationPenalty
 import com.strictpro.penalty.ViolationPenalty.Death
@@ -135,6 +135,6 @@ internal object ThreadPolicySetter {
                 }
             }
             .build()
-        setThreadPolicy(androidPolicy)
+        StrictMode.setThreadPolicy(androidPolicy)
     }
 }

@@ -1,5 +1,6 @@
 package com.strictpro.penalty
 
+// TODO document
 // TODO add priorities, so death penalty should execute after previous
 sealed class ViolationPenalty {
     data object Log : ViolationPenalty()

@@ -7,7 +7,7 @@ import com.strictpro.StrictPro
 import com.strictpro.penalty.ViolationPenalty
 import com.strictpro.utils.shouldDeathOnNetwork
 
-object ThreadPolicyPenaltiesCreator {
+internal object ThreadPolicyPenaltiesCreator {
     @RequiresApi(Build.VERSION_CODES.P)
     fun create(threadPolicy: StrictPro.ThreadPolicy, violation: Violation): Set<ViolationPenalty> {
         val penalties = threadPolicy.getPenalties().toMutableSet()

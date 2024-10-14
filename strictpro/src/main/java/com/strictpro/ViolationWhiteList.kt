@@ -2,7 +2,6 @@ package com.strictpro
 
 import android.content.Context
 import android.os.Build
-import android.os.strictmode.NetworkViolation
 import android.os.strictmode.Violation
 import com.strictpro.penalty.ViolationPenalty
 import com.strictpro.utils.Base64Util
@@ -13,11 +12,12 @@ import com.strictpro.utils.stackTraceToStringCompat
 
 internal typealias ViolationPredicate = (Violation) -> ViolationPenalty?
 
+// TODO document
 class ViolationWhiteList {
 
     private val whiteListPredicates = mutableListOf<ViolationPredicate>()
 
-    fun base64(base64: String, penalty: ViolationPenalty) {
+    fun base64(base64: String, penalty: ViolationPenalty?) {
         whiteListPredicates.add { violation ->
             val stack = violation.stackTraceToStringCompat()
             val base64Stack = Base64Util.encodeToString(stack)
@@ -29,7 +29,7 @@ class ViolationWhiteList {
         }
     }
 
-    fun contains(substring: String, penalty: ViolationPenalty) {
+    fun contains(substring: String, penalty: ViolationPenalty?) {
         whiteListPredicates.add { violation ->
             if (violation.stackTraceToStringCompat().contains(substring)) {
                 penalty

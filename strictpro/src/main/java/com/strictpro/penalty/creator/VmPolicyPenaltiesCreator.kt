@@ -8,7 +8,7 @@ import com.strictpro.penalty.ViolationPenalty
 import com.strictpro.utils.shouldDeathOnCleartextNetwork
 import com.strictpro.utils.shouldDeathOnFileUriExposure
 
-object VmPolicyPenaltiesCreator {
+internal object VmPolicyPenaltiesCreator {
     @RequiresApi(Build.VERSION_CODES.P)
     fun create(vmPolicy: StrictPro.VmPolicy, violation: Violation): Set<ViolationPenalty> {
         val penalties = vmPolicy.getPenalties().toMutableSet()
