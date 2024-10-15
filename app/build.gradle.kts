@@ -67,8 +67,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(project(":strictpro"))
-
-//    TODO remove
-    implementation("com.github.kirich1409:strict-mode-compat:30.2.0")
-    implementation("com.github.kirich1409:strict-mode-compat-ktx:30.2.0")
 }

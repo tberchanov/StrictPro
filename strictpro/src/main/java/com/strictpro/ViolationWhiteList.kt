@@ -12,7 +12,35 @@ import com.strictpro.utils.stackTraceToStringCompat
 
 internal typealias ViolationPredicate = (Violation) -> ViolationPenalty?
 
-// TODO document
+/**
+ * The `ViolationWhiteList` class is used to define a set of conditions (predicates) that determine
+ * which violations should be ignored or assigned specific penalties. This is useful for customizing
+ * the behavior of strict mode policies in Android applications.
+ *
+ * The class provides several methods to add different types of predicates to the white list:
+ *
+ * - `base64(base64: String, penalty: ViolationPenalty?)`: Adds a predicate that matches violations
+ *   based on a base64-encoded stack trace. If the stack trace of a violation matches the provided
+ *   base64 string, the specified penalty is applied.
+ *
+ * - `contains(substring: String, penalty: ViolationPenalty?)`: Adds a predicate that matches violations
+ *   based on a substring in the stack trace. If the stack trace of a violation contains the specified
+ *   substring, the specified penalty is applied.
+ *
+ * - `ignoreIf(predicate: ViolationPredicate)`: Adds a custom predicate to the white list. The predicate
+ *   is a function that takes a `Violation` and returns a `ViolationPenalty?`. If the predicate returns
+ *   a non-null penalty, it is applied to the violation.
+ *
+ * - `detectAppViolationsOnly(context: Context)`: Adds a predicate that ignores all violations that do
+ *   not contain the application's package name in the stack trace.
+ *
+ * The class also provides an internal method to retrieve the penalties for a given violation:
+ *
+ * - `internal fun getWhiteListPenalties(violation: Violation): Set<ViolationPenalty>`: Evaluates all
+ *   predicates in the white list against the provided violation and returns a set of penalties that
+ *   should be applied. If certain conditions are met (e.g., network-related violations), additional
+ *   penalties may be added.
+ */
 class ViolationWhiteList {
 
     private val whiteListPredicates = mutableListOf<ViolationPredicate>()

@@ -107,7 +107,6 @@ object StrictPro {
             DialogPenaltyExecutor(),
             FlashScreenPenaltyExecutor(),
             DeathPenaltyExecutor(),
-            // TODO Add NotificationPenaltyExecutor, ToastPenaltyExecutor, VibrationPenaltyExecutor, SoundPenaltyExecutor
         )
     )
 
