@@ -1,8 +1,10 @@
 package com.strictpro.policy
 
-import android.os.Build
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
+import androidx.annotation.RequiresApi
 import com.strictpro.StrictPro
 import com.strictpro.penalty.ViolationPenalty
 import com.strictpro.penalty.ViolationPenalty.Death
@@ -10,6 +12,7 @@ import com.strictpro.penalty.ViolationPenalty.DeathOnNetwork
 import com.strictpro.penalty.ViolationPenalty.Dialog
 import com.strictpro.penalty.ViolationPenalty.DropBox
 import com.strictpro.penalty.ViolationPenalty.FlashScreen
+import com.strictpro.penalty.ViolationPenalty.Ignore
 import com.strictpro.penalty.ViolationPenalty.Log
 import com.strictpro.penalty.creator.ThreadPolicyPenaltiesCreator
 import com.strictpro.utils.MainThreadExecutor
@@ -19,9 +22,20 @@ import com.strictpro.utils.doIf
 internal object ThreadPolicySetter {
     fun set(policy: StrictPro.ThreadPolicy) {
         val androidPolicy = ThreadPolicy.Builder()
-            .doIf(policy.detectAll) { detectAll() }
+            .applyDetects(policy)
+            .applyPermits(policy)
+            .applyOther(policy)
+            .applyPenalties(policy)
+            .build()
+        StrictMode.setThreadPolicy(androidPolicy)
+    }
+
+    private fun ThreadPolicy.Builder.applyDetects(
+        policy: StrictPro.ThreadPolicy
+    ): ThreadPolicy.Builder {
+        return doIf(policy.detectAll) { detectAll() }
             .doIf(policy.detectExplicitGc) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     detectExplicitGc()
                 } else {
                     UnsupportedLogger.logUnsupportedFeature(
@@ -35,7 +49,7 @@ internal object ThreadPolicySetter {
             .doIf(policy.detectNetwork) { detectNetwork() }
             .doIf(policy.detectCustomSlowCalls) { detectCustomSlowCalls() }
             .doIf(policy.detectResourceMismatches) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (VERSION.SDK_INT >= VERSION_CODES.M) {
                     detectResourceMismatches()
                 } else {
                     UnsupportedLogger.logUnsupportedFeature(
@@ -45,7 +59,7 @@ internal object ThreadPolicySetter {
                 }
             }
             .doIf(policy.detectUnbufferedIo) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (VERSION.SDK_INT >= VERSION_CODES.O) {
                     detectUnbufferedIo()
                 } else {
                     UnsupportedLogger.logUnsupportedFeature(
@@ -54,9 +68,14 @@ internal object ThreadPolicySetter {
                     )
                 }
             }
-            .doIf(policy.permitAll) { permitAll() }
+    }
+
+    private fun ThreadPolicy.Builder.applyPermits(
+        policy: StrictPro.ThreadPolicy
+    ): ThreadPolicy.Builder {
+        return doIf(policy.permitAll) { permitAll() }
             .doIf(policy.permitExplicitGc) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     permitExplicitGc()
                 } else {
                     UnsupportedLogger.logUnsupportedFeature(
@@ -70,7 +89,7 @@ internal object ThreadPolicySetter {
             .doIf(policy.permitNetwork) { permitNetwork() }
             .doIf(policy.permitCustomSlowCalls) { permitCustomSlowCalls() }
             .doIf(policy.permitResourceMismatches) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (VERSION.SDK_INT >= VERSION_CODES.M) {
                     permitResourceMismatches()
                 } else {
                     UnsupportedLogger.logUnsupportedFeature(
@@ -80,7 +99,7 @@ internal object ThreadPolicySetter {
                 }
             }
             .doIf(policy.permitUnbufferedIo) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (VERSION.SDK_INT >= VERSION_CODES.O) {
                     permitUnbufferedIo()
                 } else {
                     UnsupportedLogger.logUnsupportedFeature(
@@ -89,52 +108,73 @@ internal object ThreadPolicySetter {
                     )
                 }
             }
-            .apply {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    policy.getPenaltyListeners().forEach { (executor, listener) ->
-                        penaltyListener(executor, listener)
-                    }
-                } else {
-                    UnsupportedLogger.logUnsupportedFeature(
-                        StrictPro.ThreadPolicy.CATEGORY,
-                        "penaltyListener"
-                    )
-                }
+    }
+
+    private fun ThreadPolicy.Builder.applyOther(
+        policy: StrictPro.ThreadPolicy
+    ): ThreadPolicy.Builder {
+        if (VERSION.SDK_INT >= VERSION_CODES.P) {
+            policy.getPenaltyListeners().forEach { (executor, listener) ->
+                penaltyListener(executor, listener)
             }
-            .apply {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    penaltyListener(MainThreadExecutor()) { violation ->
-                        val whiteListPenalties =
-                            policy.violationWhiteList.getWhiteListPenalties(violation)
-                        if (whiteListPenalties.isEmpty()) {
-                            val policyPenalties =
-                                ThreadPolicyPenaltiesCreator.create(policy, violation)
-                            StrictPro.penaltyExecutor.execute(
-                                violation, policyPenalties, StrictPro.currentActivityRef.get()
-                            )
-                        } else if (whiteListPenalties.contains(ViolationPenalty.Ignore)) {
-                            // noop
-                        } else {
-                            StrictPro.penaltyExecutor.execute(
-                                violation, whiteListPenalties, StrictPro.currentActivityRef.get()
-                            )
-                        }
-                    }
-                } else {
-                    UnsupportedLogger.logUnsupportedFeature(
-                        StrictPro.ThreadPolicy.CATEGORY,
-                        "setWhiteList"
-                    )
-                    val penalties = policy.getPenalties()
-                    doIf(penalties.contains(Log)) { penaltyLog() }
-                    doIf(penalties.contains(Death)) { penaltyDeath() }
-                    doIf(penalties.contains(DropBox)) { penaltyDropBox() }
-                    doIf(penalties.contains(Dialog)) { penaltyDialog() }
-                    doIf(penalties.contains(FlashScreen)) { penaltyFlashScreen() }
-                    doIf(penalties.contains(DeathOnNetwork)) { penaltyDeathOnNetwork() }
-                }
+        } else {
+            UnsupportedLogger.logUnsupportedFeature(
+                StrictPro.ThreadPolicy.CATEGORY,
+                "penaltyListener"
+            )
+        }
+        return this
+    }
+
+    private fun ThreadPolicy.Builder.applyPenalties(
+        policy: StrictPro.ThreadPolicy
+    ): ThreadPolicy.Builder {
+        return if (VERSION.SDK_INT >= VERSION_CODES.P) {
+            applyStrictProPenalties(policy)
+        } else {
+            if (policy.violationWhiteList.containsConditions()) {
+                UnsupportedLogger.logUnsupportedFeature(
+                    StrictPro.ThreadPolicy.CATEGORY,
+                    "setWhiteList"
+                )
             }
-            .build()
-        StrictMode.setThreadPolicy(androidPolicy)
+            applyStrictModePenalties(policy.getPenalties())
+        }
+    }
+
+    @RequiresApi(VERSION_CODES.P)
+    private fun ThreadPolicy.Builder.applyStrictProPenalties(
+        policy: StrictPro.ThreadPolicy
+    ): ThreadPolicy.Builder {
+        return penaltyListener(MainThreadExecutor()) { violation ->
+            val whiteListPenalties =
+                policy.violationWhiteList.getWhiteListPenalties(violation)
+            if (whiteListPenalties.contains(Ignore)) {
+                // noop
+            } else {
+                val penalties = whiteListPenalties.ifEmpty {
+                    ThreadPolicyPenaltiesCreator.create(policy, violation)
+                }.toMutableSet()
+                // According to the StrictMode documentation,
+                // if no penalties are set, the default is Log.
+                if (penalties.isEmpty()) {
+                    penalties.add(Log)
+                }
+                StrictPro.penaltyExecutor.execute(
+                    violation, penalties, StrictPro.currentActivityRef.get()
+                )
+            }
+        }
+    }
+
+    private fun ThreadPolicy.Builder.applyStrictModePenalties(
+        penalties: Set<ViolationPenalty>
+    ): ThreadPolicy.Builder {
+        return doIf(penalties.contains(Log)) { penaltyLog() }
+            .doIf(penalties.contains(Death)) { penaltyDeath() }
+            .doIf(penalties.contains(DropBox)) { penaltyDropBox() }
+            .doIf(penalties.contains(Dialog)) { penaltyDialog() }
+            .doIf(penalties.contains(FlashScreen)) { penaltyFlashScreen() }
+            .doIf(penalties.contains(DeathOnNetwork)) { penaltyDeathOnNetwork() }
     }
 }

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">StrictPro</string>
+    <string name="Trigger_DiskReadViolation">Trigger DiskReadViolation</string>
+    <string name="Trigger_CustomViolation">Trigger CustomViolation</string>
+    <string name="Trigger_ExplicitGcViolation">Trigger ExplicitGcViolation</string>
+    <string name="Trigger_LeakedClosableViolation">Trigger LeakedClosableViolation</string>
+    <string name="Trigger_NetworkViolation">Trigger NetworkViolation</string>
 </resources>

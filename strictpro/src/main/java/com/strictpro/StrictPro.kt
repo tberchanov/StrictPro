@@ -377,21 +377,27 @@ object StrictPro {
              *     .detectAll()
              *     .penaltyDeath()
              *     .setWhiteList {
-             *         // Defines penalty for the violation by substring in stack. Ignore violation if penalty is null.
+             *         // Defines penalty for the violation by substring in stack. Do nothing on violation if penalty is null.
              *         contains("some substring in stack", null)
-             *         // Defines penalty for the violation by base64 encoded stack. Ignore violation if penalty is null.
+             *         // Defines penalty for the violation by base64 encoded stack.
              *         base64("base64 encoded stack trace", ViolationPenalty.Ignore)
              *         base64("another base64 encoded stack trace", ViolationPenalty.Dialog)
              *         // Ignore all violations that are not contain app package name in stack.
              *         detectAppViolationsOnly(context)
-             *         // Custom logic to define penalty for the violation. Ignore violation if penalty is null.
-             *         ignoreIf { violation ->
+             *         // Custom logic to define penalty for the violation. Do nothing on violation if penalty is null.
+             *         condition { violation ->
              *             // some custom logic
              *             ViolationPenalty.FlashScreen
              *         }
              *     }
              *     .build()
              * </pre>
+             *
+             * If at least one penalty is defined for the violation in the whitelist,
+             * default penalties will NOT be applied.
+             *
+             * If a list of penalties is defined for the violation in the whitelist,
+             * and this list contains ViolationPenalty.Ignore, all penalties will be ignored.
              *
              * Call requires API level 28 or higher, otherwise it will be ignored.
              */
@@ -857,21 +863,27 @@ object StrictPro {
              *     .detectAll()
              *     .penaltyDeath()
              *     .setWhiteList {
-             *         // Defines penalty for the violation by substring in stack. Ignore violation if penalty is null.
+             *         // Defines penalty for the violation by substring in stack. Do nothing on violation if penalty is null.
              *         contains("some substring in stack", null)
-             *         // Defines penalty for the violation by base64 encoded stack. Ignore violation if penalty is null.
+             *         // Defines penalty for the violation by base64 encoded stack.
              *         base64("base64 encoded stack trace", ViolationPenalty.Ignore)
              *         base64("another base64 encoded stack trace", ViolationPenalty.Dialog)
              *         // Ignore all violations that are not contain app package name in stack.
              *         detectAppViolationsOnly(context)
-             *         // Custom logic to define penalty for the violation. Ignore violation if penalty is null.
-             *         ignoreIf { violation ->
+             *         // Custom logic to define penalty for the violation. Do nothing on violation if penalty is null.
+             *         condition { violation ->
              *             // some custom logic
              *             ViolationPenalty.FlashScreen
              *         }
              *     }
              *     .build()
              * </pre>
+             *
+             * If at least one penalty is defined for the violation in the whitelist,
+             * default penalties will NOT be applied.
+             *
+             * If a list of penalties is defined for the violation in the whitelist,
+             * and this list contains ViolationPenalty.Ignore, all penalties will be ignored.
              *
              * Call requires API level 28 or higher, otherwise it will be ignored.
              */

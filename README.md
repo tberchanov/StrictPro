@@ -52,15 +52,15 @@ class MainApplication: Application() {
                 .penaltyDialog()
                 .penaltyFlashScreen()
                 .setWhiteList {
-                    // Defines penalty for the violation by substring in stack. Ignore violation if penalty is null.
+                    // Defines penalty for the violation by substring in stack. Do nothing on violation if penalty is null.
                     contains("some substring in stack", null)
-                    // Defines penalty for the violation by base64 encoded stack. Ignore violation if penalty is null.
+                    // Defines penalty for the violation by base64 encoded stack.
                     base64("base64 encoded stack trace", ViolationPenalty.Ignore)
                     base64("another base64 encoded stack trace", ViolationPenalty.Dialog)
                     // Ignore all violations that are not contain app package name in stack.
                     detectAppViolationsOnly(context)
-                    // Custom logic to define penalty for the violation. Ignore violation if penalty is null.
-                    ignoreIf { violation ->
+                    // Custom logic to define penalty for the violation. Do nothing on violation if penalty is null.
+                    condition { violation ->
                         // some custom logic
                         ViolationPenalty.FlashScreen
                     }
@@ -76,15 +76,15 @@ class MainApplication: Application() {
                 .penaltyDialog()
                 .penaltyFlashScreen()
                 .setWhiteList {
-                    // Defines penalty for the violation by substring in stack. Ignore violation if penalty is null.
+                    // Defines penalty for the violation by substring in stack. Do nothing on violation if penalty is null.
                     contains("some substring in stack", null)
-                    // Defines penalty for the violation by base64 encoded stack. Ignore violation if penalty is null.
+                    // Defines penalty for the violation by base64 encoded stack.
                     base64("base64 encoded stack trace", ViolationPenalty.Ignore)
                     base64("another base64 encoded stack trace", ViolationPenalty.Dialog)
                     // Ignore all violations that are not contain app package name in stack.
                     detectAppViolationsOnly(context)
-                    // Custom logic to define penalty for the violation. Ignore violation if penalty is null.
-                    ignoreIf { violation ->
+                    // Custom logic to define penalty for the violation. Do nothing on violation if penalty is null.
+                    condition { violation ->
                         // some custom logic
                         ViolationPenalty.FlashScreen
                     }
@@ -102,8 +102,6 @@ Run the sample `app` to trigger StrictMode violations and explore StrictPro’s 
 
 Future plans / TODO ⏳:
 ---
-
-* Enable logging to logcat if no penalty is specified for ThreadPolicy or VmPolicy.
 
 * Add dialog rate limiting (trottling).
 
@@ -128,6 +126,8 @@ Learn more about StrictMode and its uses:
 * https://medium.com/mobile-app-development-publication/walk-through-hell-with-android-strictmode-7e8605168032
 
 * https://elye-project.medium.com/hell-level-4-unleashed-by-android-strict-mode-dare-you-challenge-it-1dc9048bb4fb
+
+* https://firebase.blog/posts/2017/07/find-more-bugs-using-strictmode-with/
 
 ## License 📜
 
