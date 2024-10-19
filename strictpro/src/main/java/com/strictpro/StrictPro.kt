@@ -12,9 +12,11 @@ import com.strictpro.penalty.executor.DialogPenaltyExecutor
 import com.strictpro.penalty.executor.DropBoxPenaltyExecutor
 import com.strictpro.penalty.executor.FlashScreenPenaltyExecutor
 import com.strictpro.penalty.executor.LogPenaltyExecutor
+import com.strictpro.penalty.executor.PenaltyExecutor
 import com.strictpro.policy.ThreadPolicySetter
 import com.strictpro.policy.VmPolicySetter
 import com.strictpro.utils.DefaultActivityLifecycleCallbacks
+import com.strictpro.utils.VisibleForTestingOnly_DoNotUseInProductionCode
 import java.lang.ref.WeakReference
 import java.util.concurrent.Executor
 
@@ -100,7 +102,13 @@ object StrictPro {
         )
     }
 
-    internal val penaltyExecutor = CompositePenaltyExecutor(
+    internal var penaltyExecutor = CompositePenaltyExecutor(
+        /**
+         * Creation order is important.
+         * ViolationPenalties are executing according to executors order.
+         * That's why fatal executors (DeathPenaltyExecutor) should execute lastly,
+         * to let other executors complete.
+         */
         listOf(
             LogPenaltyExecutor(),
             DropBoxPenaltyExecutor(),
@@ -916,5 +924,13 @@ object StrictPro {
      */
     fun setVmPolicy(policy: VmPolicy) {
         VmPolicySetter.set(policy)
+    }
+
+    @VisibleForTestingOnly_DoNotUseInProductionCode
+    interface VisibleForTestingOnly {
+        @VisibleForTestingOnly_DoNotUseInProductionCode
+        fun StrictPro.setPenaltyExecutors(vararg executor: PenaltyExecutor) {
+            penaltyExecutor = CompositePenaltyExecutor(executor.toList())
+        }
     }
 }

@@ -53,7 +53,14 @@ internal object VmPolicySetter {
                     )
                 }
             }
-            .doIf(policy.detectNonSdkApiUsage) {
+            /**
+             * For some reason StrictMode.VmPolicy.Builder.detectNonSdkApiUsage is not activated within
+             * StrictMode.VmPolicy.Builder.detectAll.
+             * That's why we need to activate it separately if policy.detectAll is true.
+             *
+             * Detected on API 35.
+             */
+            .doIf(policy.detectAll || policy.detectNonSdkApiUsage) {
                 if (VERSION.SDK_INT >= VERSION_CODES.P) {
                     detectNonSdkApiUsage()
                 } else {

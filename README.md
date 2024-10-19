@@ -105,10 +105,6 @@ Future plans / TODO ⏳:
 
 * Add dialog rate limiting (trottling).
 
-* Add penalties priority. Death penalty should be executed lastly
-
-* Do deathOnNetwork according to documentation: require detectNetwork, run before any penalty.
-
 * Add timing and other metadata to the DropBox penalty log.
 
 * Implement more penalties executors: NotificationPenaltyExecutor, ToastPenaltyExecutor, VibrationPenaltyExecutor, SoundPenaltyExecutor.

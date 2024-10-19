@@ -23,15 +23,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.strictpro.StrictPro
 import com.strictpro.example.ui.theme.StrictProTheme
-import java.io.File
-import java.io.FileOutputStream
 
 @Composable
-fun ComposeContent(context: Context) {
+fun ComposeContent(
+    context: Context,
+    threadPolicy: StrictPro.ThreadPolicy = buildDefaultThreadPolicy(context),
+    vmPolicy: StrictPro.VmPolicy = buildDefaultVmPolicy(context),
+) {
     LaunchedEffect(Unit) {
-        enableStrictThreadPolicy(context)
-        enableStrictVmPolicy(context)
+        StrictPro.setThreadPolicy(threadPolicy)
+        StrictPro.setVmPolicy(vmPolicy)
     }
     StrictProTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -52,7 +55,7 @@ fun ComposeContent(context: Context) {
                         Switch(threadPolicyEnabled, onCheckedChange = {
                             threadPolicyEnabled = it
                             if (it) {
-                                enableStrictThreadPolicy(context)
+                                StrictPro.setThreadPolicy(threadPolicy)
                             } else {
                                 disableStrictThreadPolicy()
                             }
@@ -65,7 +68,7 @@ fun ComposeContent(context: Context) {
                         Switch(vmPolicyEnabled, onCheckedChange = {
                             vmPolicyEnabled = it
                             if (it) {
-                                enableStrictVmPolicy(context)
+                                StrictPro.setVmPolicy(vmPolicy)
                             } else {
                                 disableStrictVmPolicy()
                             }
@@ -78,37 +81,23 @@ fun ComposeContent(context: Context) {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Button(onClick = {
-                            performPrefsEdit(context)
-                        }) {
+                        Button(onClick = { performPrefsEdit(context) }) {
                             Text(context.getString(R.string.Trigger_DiskReadViolation))
                         }
-                        Button(onClick = {
-                            StrictMode.noteSlowCall("Slow call")
-                        }) {
+                        Button(onClick = { StrictMode.noteSlowCall("Slow call") }) {
                             Text(context.getString(R.string.Trigger_CustomViolation))
                         }
-                        Button(onClick = {
-                            System.gc()
-                            System.runFinalization()
-                            System.gc()
-                        }) {
+                        Button(onClick = { performExplicitGc() }) {
                             Text(context.getString(R.string.Trigger_ExplicitGcViolation))
                         }
-                        Button(onClick = {
-                            FileOutputStream(
-                                File(
-                                    context.filesDir,
-                                    "somefile.txt"
-                                )
-                            )
-                        }) {
+                        Button(onClick = { performLeakedClosable(context) }) {
                             Text(context.getString(R.string.Trigger_LeakedClosableViolation))
                         }
-                        Button(onClick = {
-                            performNetworkOperation()
-                        }) {
+                        Button(onClick = { performNetworkOperation() }) {
                             Text(context.getString(R.string.Trigger_NetworkViolation))
+                        }
+                        Button(onClick = { performNonSdkApiUsage() }) {
+                            Text(context.getString(R.string.Trigger_NonSdkApiUsage))
                         }
                     }
                 }
