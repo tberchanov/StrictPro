@@ -19,10 +19,14 @@ fun buildDefaultThreadPolicy(context: Context) = StrictPro.ThreadPolicy.Builder(
     .setWhiteList {
         detectAppViolationsOnly(context)
     }
+//    .penaltyListener(context.mainExecutor) { v ->
+//        Log.d("StrictPro", "Violation time: ${CUSTOM_VIOLATION_START - System.currentTimeMillis()}")
+//    }
     .build()
 
 fun buildDefaultVmPolicy(context: Context) = StrictPro.VmPolicy.Builder()
     .detectAll()
+    .detectIncorrectContextUse()
     .penaltyLog()
     .penaltyDialog()
     .penaltyFlashScreen()

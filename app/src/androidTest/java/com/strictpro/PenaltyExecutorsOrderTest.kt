@@ -68,8 +68,6 @@ class PenaltyExecutorsOrderTest : VisibleForTestingOnly {
 
     @Test
     fun penalty_executors_order_on_thread_violation() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-
         composeTestRule.onNodeWithText(
             context.getString(exampleR.string.Trigger_CustomViolation)
         ).performClick()

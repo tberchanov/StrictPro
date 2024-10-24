@@ -164,6 +164,8 @@ internal object ThreadPolicySetter {
                     violation, penalties, StrictPro.currentActivityRef.get()
                 )
             }
+        }.penaltyListener(MainThreadExecutor()) { violation ->
+            android.util.Log.e("StrictPro", "stub")
         }
     }
 

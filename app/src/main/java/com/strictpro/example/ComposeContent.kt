@@ -1,6 +1,10 @@
 package com.strictpro.example
 
+import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.StrictMode
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -84,7 +88,10 @@ fun ComposeContent(
                         Button(onClick = { performPrefsEdit(context) }) {
                             Text(context.getString(R.string.Trigger_DiskReadViolation))
                         }
-                        Button(onClick = { StrictMode.noteSlowCall("Slow call") }) {
+                        Button(onClick = {
+                            CUSTOM_VIOLATION_START = System.currentTimeMillis()
+                            StrictMode.noteSlowCall("Slow call")
+                        }) {
                             Text(context.getString(R.string.Trigger_CustomViolation))
                         }
                         Button(onClick = { performExplicitGc() }) {
@@ -105,3 +112,5 @@ fun ComposeContent(
         }
     }
 }
+
+var CUSTOM_VIOLATION_START = 0L
