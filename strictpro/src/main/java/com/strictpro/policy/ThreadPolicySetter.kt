@@ -113,15 +113,17 @@ internal object ThreadPolicySetter {
     private fun ThreadPolicy.Builder.applyOther(
         policy: StrictPro.ThreadPolicy
     ): ThreadPolicy.Builder {
-        if (VERSION.SDK_INT >= VERSION_CODES.P) {
-            policy.getPenaltyListeners().forEach { (executor, listener) ->
-                penaltyListener(executor, listener)
+        if (policy.getPenaltyListeners().isNotEmpty()) {
+            if (VERSION.SDK_INT >= VERSION_CODES.P) {
+                /*
+                * Listeners are called in `applyStrictProPenalties`.
+                * */
+            } else {
+                UnsupportedLogger.logUnsupportedFeature(
+                    StrictPro.ThreadPolicy.CATEGORY,
+                    "penaltyListener"
+                )
             }
-        } else {
-            UnsupportedLogger.logUnsupportedFeature(
-                StrictPro.ThreadPolicy.CATEGORY,
-                "penaltyListener"
-            )
         }
         return this
     }
@@ -164,8 +166,16 @@ internal object ThreadPolicySetter {
                     violation, penalties, StrictPro.currentActivityRef.get()
                 )
             }
-        }.penaltyListener(MainThreadExecutor()) { violation ->
-            android.util.Log.e("StrictPro", "stub")
+
+            /*
+            * As StrictMode allows to set only single penalty listener,
+            * StrictPro should call all listeners from its internal listener.
+            * */
+            policy.getPenaltyListeners().forEach { (executor, listener) ->
+                executor.execute {
+                    listener.onThreadViolation(violation)
+                }
+            }
         }
     }
 
