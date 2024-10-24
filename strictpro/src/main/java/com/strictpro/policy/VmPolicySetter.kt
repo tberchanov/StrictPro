@@ -150,11 +150,11 @@ internal object VmPolicySetter {
     }
 
     private fun VmPolicy.Builder.applyOther(policy: StrictPro.VmPolicy): VmPolicy.Builder {
-        return apply {
+        if (policy.getPenaltyListeners().isNotEmpty()) {
             if (VERSION.SDK_INT >= VERSION_CODES.P) {
-                policy.getPenaltyListeners().forEach { (executor, listener) ->
-                    penaltyListener(executor, listener)
-                }
+                /*
+                * Listeners are called in `applyStrictProPenalties`.
+                * */
             } else {
                 UnsupportedLogger.logUnsupportedFeature(
                     StrictPro.VmPolicy.CATEGORY,
@@ -162,11 +162,11 @@ internal object VmPolicySetter {
                 )
             }
         }
-            .apply {
-                policy.getClassInstanceLimits().forEach { (clazz, limit) ->
-                    setClassInstanceLimit(clazz, limit)
-                }
-            }
+
+        policy.getClassInstanceLimits().forEach { (clazz, limit) ->
+            setClassInstanceLimit(clazz, limit)
+        }
+        return this
     }
 
     private fun VmPolicy.Builder.applyPenalties(policy: StrictPro.VmPolicy): VmPolicy.Builder {
@@ -204,6 +204,16 @@ internal object VmPolicySetter {
                 StrictPro.penaltyExecutor.execute(
                     violation, penalties, StrictPro.currentActivityRef.get()
                 )
+            }
+
+            /*
+            * As StrictMode allows to set only single penalty listener,
+            * StrictPro should call all listeners from its internal listener.
+            * */
+            policy.getPenaltyListeners().forEach { (executor, listener) ->
+                executor.execute {
+                    listener.onVmViolation(violation)
+                }
             }
         }
     }
