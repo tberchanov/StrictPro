@@ -3,6 +3,7 @@ package com.strictpro
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
 import android.os.StrictMode.OnThreadViolationListener
 import android.os.StrictMode.OnVmViolationListener
 import com.strictpro.penalty.ViolationPenalty
@@ -16,6 +17,7 @@ import com.strictpro.penalty.executor.PenaltyExecutor
 import com.strictpro.policy.ThreadPolicySetter
 import com.strictpro.policy.VmPolicySetter
 import com.strictpro.utils.DefaultActivityLifecycleCallbacks
+import com.strictpro.utils.Logger
 import com.strictpro.utils.VisibleForTestingOnly_DoNotUseInProductionCode
 import java.lang.ref.WeakReference
 import java.util.concurrent.Executor
@@ -84,19 +86,11 @@ object StrictPro {
     internal fun listenActivities(context: Context) {
         (context.applicationContext as Application).registerActivityLifecycleCallbacks(
             object : DefaultActivityLifecycleCallbacks() {
-                override fun onActivityCreated(
-                    activity: Activity,
-                    savedInstanceState: android.os.Bundle?
-                ) {
+                override fun onActivityPreCreated(activity: Activity, savedInstanceState: Bundle?) {
                     currentActivityRef = WeakReference(activity)
                 }
-
-                override fun onActivityStarted(activity: Activity) {
+                override fun onActivityResumed(activity: Activity) {
                     currentActivityRef = WeakReference(activity)
-                }
-
-                override fun onActivityDestroyed(activity: Activity) {
-                    currentActivityRef = WeakReference(null)
                 }
             }
         )
@@ -117,6 +111,20 @@ object StrictPro {
             DeathPenaltyExecutor(),
         )
     )
+
+    /**
+     * Flag to enable or disable printing of debug logs.
+     *
+     * When `printDebugLogs` is set to `true`, additional debug information will be logged
+     * to help with troubleshooting and development. This can include detailed information
+     * about policy violations, penalties applied, and other internal operations of the
+     * `StrictPro` utility.
+     *
+     * When `printDebugLogs` is set to `false`, debug logging is disabled, and only essential
+     * logs will be printed. This is the default setting to avoid cluttering the log output
+     * with too much information.
+     */
+    var printDebugLogs = false
 
     /**
      * {@link StrictPro} policy applied to a certain thread.
@@ -155,6 +163,20 @@ object StrictPro {
         internal fun getPenalties(): Set<ViolationPenalty> = penalties
         internal fun getPenaltyListeners(): List<Pair<Executor, OnThreadViolationListener>> =
             penaltyListeners
+
+        override fun toString(): String {
+            return "ThreadPolicy(detectAll=$detectAll, detectExplicitGc=$detectExplicitGc, " +
+                "detectDiskReads=$detectDiskReads, detectDiskWrites=$detectDiskWrites, " +
+                "detectNetwork=$detectNetwork, detectCustomSlowCalls=$detectCustomSlowCalls, " +
+                "detectResourceMismatches=$detectResourceMismatches, " +
+                "detectUnbufferedIo=$detectUnbufferedIo, permitAll=$permitAll, " +
+                "permitExplicitGc=$permitExplicitGc, permitDiskReads=$permitDiskReads, " +
+                "permitDiskWrites=$permitDiskWrites, permitNetwork=$permitNetwork, " +
+                "permitCustomSlowCalls=$permitCustomSlowCalls, " +
+                "permitResourceMismatches=$permitResourceMismatches, " +
+                "permitUnbufferedIo=$permitUnbufferedIo, violationWhiteList=$violationWhiteList, " +
+                "penalties=$penalties, penaltyListeners=$penaltyListeners)"
+        }
 
         /**
          * Creates {@link ThreadPolicy} instances. Methods whose names start with {@code detect}
@@ -390,8 +412,6 @@ object StrictPro {
              *         // Defines penalty for the violation by base64 encoded stack.
              *         base64("base64 encoded stack trace", ViolationPenalty.Ignore)
              *         base64("another base64 encoded stack trace", ViolationPenalty.Dialog)
-             *         // Ignore all violations that are not contain app package name in stack.
-             *         detectAppViolationsOnly(context)
              *         // Custom logic to define penalty for the violation. Do nothing on violation if penalty is null.
              *         condition { violation ->
              *             // some custom logic
@@ -421,6 +441,7 @@ object StrictPro {
              * #penaltyLog} is implicitly set.
              */
             fun build(): ThreadPolicy {
+                Logger.logDebug("ThreadPolicy.Builder.build: $threadPolicy")
                 return threadPolicy
             }
         }
@@ -479,6 +500,27 @@ object StrictPro {
             penaltyListeners
 
         internal fun getClassInstanceLimits(): Map<Class<*>, Int> = classInstanceLimits
+
+        override fun toString(): String {
+            return "VmPolicy(detectAll=$detectAll, detectActivityLeaks=$detectActivityLeaks, " +
+                "detectUntaggedSockets=$detectUntaggedSockets, " +
+                "detectCleartextNetwork=$detectCleartextNetwork, " +
+                "detectNonSdkApiUsage=$detectNonSdkApiUsage, " +
+                "detectContentUriWithoutPermission=$detectContentUriWithoutPermission, " +
+                "detectImplicitDirectBoot=$detectImplicitDirectBoot, " +
+                "detectIncorrectContextUse=$detectIncorrectContextUse, " +
+                "detectLeakedClosableObjects=$detectLeakedClosableObjects, " +
+                "detectLeakedRegistrationObjects=$detectLeakedRegistrationObjects, " +
+                "detectUnsafeIntentLaunch=$detectUnsafeIntentLaunch, " +
+                "detectFileUriExposure=$detectFileUriExposure, " +
+                "detectCredentialProtectedWhileLocked=$detectCredentialProtectedWhileLocked, " +
+                "detectLeakedSqlLiteObjects=$detectLeakedSqlLiteObjects, " +
+                "permitNonSdkApiUsage=$permitNonSdkApiUsage, " +
+                "permitUnsafeIntentLaunch=$permitUnsafeIntentLaunch, " +
+                "violationWhiteList=$violationWhiteList, penalties=$penalties, " +
+                "penaltyListeners=$penaltyListeners, " +
+                "classInstanceLimits=$classInstanceLimits)"
+        }
 
         /**
          * Creates {@link VmPolicy} instances. Methods whose names start with {@code detect} specify
@@ -876,8 +918,6 @@ object StrictPro {
              *         // Defines penalty for the violation by base64 encoded stack.
              *         base64("base64 encoded stack trace", ViolationPenalty.Ignore)
              *         base64("another base64 encoded stack trace", ViolationPenalty.Dialog)
-             *         // Ignore all violations that are not contain app package name in stack.
-             *         detectAppViolationsOnly(context)
              *         // Custom logic to define penalty for the violation. Do nothing on violation if penalty is null.
              *         condition { violation ->
              *             // some custom logic
@@ -907,6 +947,7 @@ object StrictPro {
              * #penaltyLog} is implicitly set.
              */
             fun build(): VmPolicy {
+                Logger.logDebug("VmPolicy.Builder.build: $vmPolicy")
                 return vmPolicy
             }
         }

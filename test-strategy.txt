@@ -4,10 +4,8 @@
 Whitelist:
 [accent on other penalties compared the policy, ignoring]
 +3. Test whitelist `fun condition` on ThreadPolicy and VmPolicy.
-4. Test whitelist `fun contains` on ThreadPolicy and VmPolicy.
-5. Test whitelist `fun base64` on ThreadPolicy and VmPolicy.
-6. Test whitelist `fun detectAppViolationsOnly` on ThreadPolicy and VmPolicy.
-Try to use ktor for network request. To ignore socket tag.
++4. Test whitelist `fun contains` on ThreadPolicy and VmPolicy.
++5. Test whitelist `fun base64` on ThreadPolicy and VmPolicy.
 
 Penalty executors:
 8. Test each penalty executor is running on some violation. N executors = N tests.

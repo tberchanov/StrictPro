@@ -7,7 +7,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import com.strictpro.StrictPro.VisibleForTestingOnly
-import com.strictpro.example.ComposeContent
+import com.strictpro.example.ExampleContent
 import com.strictpro.penalty.ViolationPenalty
 import com.strictpro.penalty.executor.PenaltyExecutor
 import com.strictpro.utils.VisibleForTestingOnly_DoNotUseInProductionCode
@@ -50,8 +50,7 @@ class PenaltyExecutorsOrderTest : VisibleForTestingOnly {
         )
 
         composeTestRule.setContent {
-            ComposeContent(
-                context,
+            ExampleContent(
                 threadPolicy = StrictPro.ThreadPolicy.Builder()
                     .detectAll()
                     .penaltyDeath()

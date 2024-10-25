@@ -8,7 +8,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
-import com.strictpro.example.ComposeContent
+import com.strictpro.example.ExampleContent
 import org.junit.Rule
 import org.junit.Test
 import com.strictpro.example.R as exampleR
@@ -21,7 +21,7 @@ class PenaltiesTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
 
         composeTestRule.setContent {
-            ComposeContent(context)
+            ExampleContent()
         }
 
         composeTestRule.onNodeWithText(

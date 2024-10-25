@@ -16,7 +16,7 @@ import com.strictpro.penalty.ViolationPenalty.Ignore
 import com.strictpro.penalty.ViolationPenalty.Log
 import com.strictpro.penalty.creator.ThreadPolicyPenaltiesCreator
 import com.strictpro.utils.MainThreadExecutor
-import com.strictpro.utils.UnsupportedLogger
+import com.strictpro.utils.Logger
 import com.strictpro.utils.doIf
 
 internal object ThreadPolicySetter {
@@ -38,7 +38,7 @@ internal object ThreadPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     detectExplicitGc()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.ThreadPolicy.CATEGORY,
                         "detectExplicitGc"
                     )
@@ -52,7 +52,7 @@ internal object ThreadPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.M) {
                     detectResourceMismatches()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.ThreadPolicy.CATEGORY,
                         "detectResourceMismatches"
                     )
@@ -62,7 +62,7 @@ internal object ThreadPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.O) {
                     detectUnbufferedIo()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.ThreadPolicy.CATEGORY,
                         "detectUnbufferedIo"
                     )
@@ -78,7 +78,7 @@ internal object ThreadPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     permitExplicitGc()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.ThreadPolicy.CATEGORY,
                         "permitExplicitGc"
                     )
@@ -92,7 +92,7 @@ internal object ThreadPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.M) {
                     permitResourceMismatches()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.ThreadPolicy.CATEGORY,
                         "permitResourceMismatches"
                     )
@@ -102,7 +102,7 @@ internal object ThreadPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.O) {
                     permitUnbufferedIo()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.ThreadPolicy.CATEGORY,
                         "permitUnbufferedIo"
                     )
@@ -119,7 +119,7 @@ internal object ThreadPolicySetter {
                 * Listeners are called in `applyStrictProPenalties`.
                 * */
             } else {
-                UnsupportedLogger.logUnsupportedFeature(
+                Logger.logUnsupportedFeature(
                     StrictPro.ThreadPolicy.CATEGORY,
                     "penaltyListener"
                 )
@@ -135,7 +135,7 @@ internal object ThreadPolicySetter {
             applyStrictProPenalties(policy)
         } else {
             if (policy.violationWhiteList.containsConditions()) {
-                UnsupportedLogger.logUnsupportedFeature(
+                Logger.logUnsupportedFeature(
                     StrictPro.ThreadPolicy.CATEGORY,
                     "setWhiteList"
                 )
@@ -149,12 +149,15 @@ internal object ThreadPolicySetter {
         policy: StrictPro.ThreadPolicy
     ): ThreadPolicy.Builder {
         return penaltyListener(MainThreadExecutor()) { violation ->
+            Logger.logDebug("ThreadPolicySetter.penaltyListener: $violation")
+
             val whiteListPenalties =
                 policy.violationWhiteList.getWhiteListPenalties(violation)
             if (whiteListPenalties.contains(Ignore)) {
-                // noop
+                Logger.logDebug("ThreadPolicySetter.penaltyListener: ignoring penalties")
             } else {
                 val penalties = whiteListPenalties.ifEmpty {
+                    Logger.logDebug("ThreadPolicySetter.penaltyListener: no white list penalties")
                     ThreadPolicyPenaltiesCreator.create(policy, violation)
                 }.toMutableSet()
                 // According to the StrictMode documentation,

@@ -57,14 +57,11 @@ class MainApplication: Application() {
                     // Defines penalty for the violation by base64 encoded stack.
                     base64("base64 encoded stack trace", ViolationPenalty.Ignore)
                     base64("another base64 encoded stack trace", ViolationPenalty.Dialog)
-                    // Ignore all violations that are not contain app package name in stack.
-                    detectAppViolationsOnly(context)
                     // Custom logic to define penalty for the violation. Do nothing on violation if penalty is null.
                     condition { violation ->
                         // some custom logic
                         ViolationPenalty.FlashScreen
                     }
-                    detectAppViolationsOnly(this@MainApplication)
                 }
                 .build(),
         )
@@ -81,14 +78,11 @@ class MainApplication: Application() {
                     // Defines penalty for the violation by base64 encoded stack.
                     base64("base64 encoded stack trace", ViolationPenalty.Ignore)
                     base64("another base64 encoded stack trace", ViolationPenalty.Dialog)
-                    // Ignore all violations that are not contain app package name in stack.
-                    detectAppViolationsOnly(context)
                     // Custom logic to define penalty for the violation. Do nothing on violation if penalty is null.
                     condition { violation ->
                         // some custom logic
                         ViolationPenalty.FlashScreen
                     }
-                    detectAppViolationsOnly(this@MainApplication)
                 }
                 .build(),
         )
