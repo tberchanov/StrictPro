@@ -19,6 +19,12 @@ fun buildDefaultThreadPolicy(context: Context) = StrictPro.ThreadPolicy.Builder(
     .setWhiteList {
         detectAppViolationsOnly(context)
     }
+    .penaltyListener(context.mainExecutor) { violation ->
+        Log.d("StrictPro", "thread penaltyListener1", violation)
+    }
+    .penaltyListener(context.mainExecutor) { violation ->
+        Log.d("StrictPro", "thread penaltyListener2", violation)
+    }
     .build()
 
 fun buildDefaultVmPolicy(context: Context) = StrictPro.VmPolicy.Builder()
@@ -28,6 +34,12 @@ fun buildDefaultVmPolicy(context: Context) = StrictPro.VmPolicy.Builder()
     .penaltyFlashScreen()
     .setWhiteList {
         detectAppViolationsOnly(context)
+    }
+    .penaltyListener(context.mainExecutor) { violation ->
+        Log.d("StrictPro", "vm penaltyListener1", violation)
+    }
+    .penaltyListener(context.mainExecutor) { violation ->
+        Log.d("StrictPro", "vm penaltyListener2", violation)
     }
     .build()
 
