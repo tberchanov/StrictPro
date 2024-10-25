@@ -31,9 +31,6 @@ internal typealias PenaltyCondition = (Violation) -> ViolationPenalty?
  *   is a function that takes a `Violation` and returns a `ViolationPenalty?`. If the condition returns
  *   a non-null penalty, it is applied to the violation.
  *
- * - `detectAppViolationsOnly(context: Context)`: Adds a condition that ignores all violations that do
- *   not contain the application's package name in the stack trace.
- *
  * The class also provides an internal method to retrieve the penalties for a given violation:
  *
  * - `internal fun getWhiteListPenalties(violation: Violation): Set<ViolationPenalty>`: Evaluates all
@@ -83,16 +80,6 @@ class ViolationWhiteList {
      */
     fun condition(condition: PenaltyCondition) {
         whiteListConditions.add(condition)
-    }
-
-    fun detectAppViolationsOnly(context: Context) {
-        whiteListConditions.add { violation ->
-            if (violation.stackTraceToStringCompat().contains(context.packageName)) {
-                null
-            } else {
-                ViolationPenalty.Ignore
-            }
-        }
     }
 
     internal fun getWhiteListPenalties(violation: Violation): Set<ViolationPenalty> {

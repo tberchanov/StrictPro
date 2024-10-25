@@ -15,7 +15,7 @@ import com.strictpro.penalty.ViolationPenalty.Ignore
 import com.strictpro.penalty.ViolationPenalty.Log
 import com.strictpro.penalty.creator.VmPolicyPenaltiesCreator
 import com.strictpro.utils.MainThreadExecutor
-import com.strictpro.utils.UnsupportedLogger
+import com.strictpro.utils.Logger
 import com.strictpro.utils.doIf
 
 internal object VmPolicySetter {
@@ -37,17 +37,24 @@ internal object VmPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.O) {
                     detectUntaggedSockets()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "detectUntaggedSockets"
                     )
                 }
             }
-            .doIf(policy.detectCleartextNetwork) {
+            /**
+             * For some reason StrictMode.VmPolicy.Builder.detectCleartextNetwork is not activated within
+             * StrictMode.VmPolicy.Builder.detectAll.
+             * That's why we need to activate it separately if policy.detectAll is true.
+             *
+             * Detected on API 35.
+             */
+            .doIf(policy.detectAll || policy.detectCleartextNetwork) {
                 if (VERSION.SDK_INT >= VERSION_CODES.M) {
                     detectCleartextNetwork()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "detectCleartextNetwork"
                     )
@@ -64,7 +71,7 @@ internal object VmPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.P) {
                     detectNonSdkApiUsage()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "detectNonSdkApiUsage"
                     )
@@ -74,7 +81,7 @@ internal object VmPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.O) {
                     detectContentUriWithoutPermission()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "detectContentUriWithoutPermission"
                     )
@@ -84,7 +91,7 @@ internal object VmPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.Q) {
                     detectImplicitDirectBoot()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "detectImplicitDirectBoot"
                     )
@@ -94,7 +101,7 @@ internal object VmPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.S) {
                     detectIncorrectContextUse()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "detectIncorrectContextUse"
                     )
@@ -106,7 +113,7 @@ internal object VmPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.S) {
                     detectUnsafeIntentLaunch()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "detectUnsafeIntentLaunch"
                     )
@@ -117,7 +124,7 @@ internal object VmPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.Q) {
                     detectCredentialProtectedWhileLocked()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "detectCredentialProtectedWhileLocked"
                     )
@@ -131,7 +138,7 @@ internal object VmPolicySetter {
             if (VERSION.SDK_INT >= VERSION_CODES.P) {
                 permitNonSdkApiUsage()
             } else {
-                UnsupportedLogger.logUnsupportedFeature(
+                Logger.logUnsupportedFeature(
                     StrictPro.VmPolicy.CATEGORY,
                     "permitNonSdkApiUsage"
                 )
@@ -141,7 +148,7 @@ internal object VmPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.S) {
                     permitUnsafeIntentLaunch()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "permitUnsafeIntentLaunch"
                     )
@@ -156,7 +163,7 @@ internal object VmPolicySetter {
                 * Listeners are called in `applyStrictProPenalties`.
                 * */
             } else {
-                UnsupportedLogger.logUnsupportedFeature(
+                Logger.logUnsupportedFeature(
                     StrictPro.VmPolicy.CATEGORY,
                     "penaltyListener"
                 )
@@ -174,7 +181,7 @@ internal object VmPolicySetter {
             applyStrictProPenalties(policy)
         } else {
             if (policy.violationWhiteList.containsConditions()) {
-                UnsupportedLogger.logUnsupportedFeature(
+                Logger.logUnsupportedFeature(
                     StrictPro.VmPolicy.CATEGORY,
                     "setWhiteList"
                 )
@@ -188,12 +195,15 @@ internal object VmPolicySetter {
         policy: StrictPro.VmPolicy
     ): VmPolicy.Builder {
         return penaltyListener(MainThreadExecutor()) { violation ->
+            Logger.logDebug("VmPolicySetter.penaltyListener: $violation")
+
             val whiteListPenalties =
                 policy.violationWhiteList.getWhiteListPenalties(violation)
             if (whiteListPenalties.contains(Ignore)) {
-                // noop
+                Logger.logDebug("VmPolicySetter.penaltyListener: ignoring penalties")
             } else {
                 val penalties = whiteListPenalties.ifEmpty {
+                    Logger.logDebug("VmPolicySetter.penaltyListener: no white list penalties")
                     VmPolicyPenaltiesCreator.create(policy, violation)
                 }.toMutableSet()
                 // According to the StrictMode documentation,
@@ -228,7 +238,7 @@ internal object VmPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.N) {
                     penaltyDeathOnFileUriExposure()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "penaltyDeathOnFileUriExposure"
                     )
@@ -238,7 +248,7 @@ internal object VmPolicySetter {
                 if (VERSION.SDK_INT >= VERSION_CODES.M) {
                     penaltyDeathOnCleartextNetwork()
                 } else {
-                    UnsupportedLogger.logUnsupportedFeature(
+                    Logger.logUnsupportedFeature(
                         StrictPro.VmPolicy.CATEGORY,
                         "penaltyDeathOnCleartextNetwork"
                     )
