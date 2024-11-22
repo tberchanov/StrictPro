@@ -1,5 +1,6 @@
 package com.strictpro.ui.presentation.violations.list.viewmodel
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strictpro.ui.domain.model.ViolationQuantity
@@ -20,7 +21,6 @@ class ViolationsViewModel(
     fun loadData() {
         viewModelScope.launch(snackbarCoroutineExceptionHandler) {
             getViolationsQuantityUseCase.execute()
-                .catch { }
                 .collect { violations ->
                     _state.value = ViolationsListState(violations = violations)
                 }
@@ -28,7 +28,7 @@ class ViolationsViewModel(
     }
 }
 
+@Stable
 data class ViolationsListState(
-    val loading: Boolean = false,
     val violations: List<ViolationQuantity> = emptyList(),
 )

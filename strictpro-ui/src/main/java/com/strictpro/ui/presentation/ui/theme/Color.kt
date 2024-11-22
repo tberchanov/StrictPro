@@ -11,6 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val DarkGray = Color(0xFF121212)
+val LightGray = Color(0xFF949494)
 val PrimaryRed = Color(0xFFFF3B30)
 val AccentRed = Color(0xFFE63946)
 val Bordo = Color(0xFF8B0000)

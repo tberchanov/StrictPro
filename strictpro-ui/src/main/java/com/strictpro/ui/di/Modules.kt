@@ -8,6 +8,9 @@ import com.strictpro.ui.data.LocalViolationDataSource
 import com.strictpro.ui.data.ViolationRepositoryImpl
 import com.strictpro.ui.domain.usecase.GetViolationsQuantityUseCase
 import com.strictpro.ui.domain.ViolationRepository
+import com.strictpro.ui.domain.usecase.GetAppPackageNameUseCase
+import com.strictpro.ui.domain.usecase.GetViolationsUseCase
+import com.strictpro.ui.presentation.violations.history.viewmodel.ViolationsHistoryViewModel
 import com.strictpro.ui.presentation.violations.list.viewmodel.ViolationsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
@@ -23,10 +26,13 @@ internal val dataModule = module {
 
 internal val domainModule = module {
     factory { GetViolationsQuantityUseCase(get()) }
+    factory { GetViolationsUseCase(get()) }
+    factory { GetAppPackageNameUseCase(androidContext()) }
 }
 
 internal val viewModelModule = module {
     viewModel { ViolationsViewModel(get()) }
+    viewModel { ViolationsHistoryViewModel(get(), get()) }
 }
 
 internal val appModules = listOf(dataModule, domainModule, viewModelModule)

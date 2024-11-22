@@ -7,20 +7,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.strictpro.ui.domain.model.ViolationQuantity
+import com.strictpro.ui.domain.model.ViolationType
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-fun ViolationsList(violations: ImmutableList<ViolationQuantity>) {
+internal inline fun ViolationsList(
+    violations: ImmutableList<ViolationQuantity>,
+    crossinline onClick: (ViolationQuantity) -> Unit = {},
+) {
     LazyColumn {
         items(
             violations.size,
-            key = { violations[it].violationName },
+            key = { violations[it].type.value },
         ) { index ->
-            // TODO on click open ViolationHistory of the selected type
             ViolationItem(
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                 violationsQuantity = violations[index],
+                onClick = onClick,
             )
         }
     }
@@ -31,16 +35,16 @@ fun ViolationsList(violations: ImmutableList<ViolationQuantity>) {
     backgroundColor = 0xFF121212, // DarkGray
 )
 @Composable
-fun ViolationsListPreview() {
+internal fun ViolationsListPreview() {
     ViolationsList(
         listOf(
-            ViolationQuantity(1, "Name"),
-            ViolationQuantity(10, "Name"),
-            ViolationQuantity(123, "Name"),
-            ViolationQuantity(1234, "Name"),
-            ViolationQuantity(112, "Name"),
-            ViolationQuantity(90, "Name"),
-            ViolationQuantity(7, "Name"),
+            ViolationQuantity(1, ViolationType("Name")),
+            ViolationQuantity(10, ViolationType("Name")),
+            ViolationQuantity(123, ViolationType("Name")),
+            ViolationQuantity(1234, ViolationType("Name")),
+            ViolationQuantity(112, ViolationType("Name")),
+            ViolationQuantity(90, ViolationType("Name")),
+            ViolationQuantity(7, ViolationType("Name")),
         ).toImmutableList()
     )
 }

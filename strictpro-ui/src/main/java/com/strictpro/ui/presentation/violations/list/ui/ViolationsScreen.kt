@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.strictpro.ui.R
 import com.strictpro.ui.domain.model.ViolationQuantity
+import com.strictpro.ui.domain.model.ViolationType
 import com.strictpro.ui.presentation.ui.theme.DarkGray
 import com.strictpro.ui.presentation.ui.theme.PrimaryRed
 import com.strictpro.ui.presentation.violations.list.viewmodel.ViolationsListState
@@ -29,20 +30,26 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
-@Serializable
-object ViolationsScreenRoute
-
 @Composable
-fun ViolationsScreen(viewModel: ViolationsViewModel = koinViewModel()) {
+fun ViolationsScreen(
+    viewModel: ViolationsViewModel = koinViewModel(),
+    onViolationTypeClicked: (ViolationType) -> Unit = {},
+) {
     LaunchedEffect(Unit) {
         viewModel.loadData()
     }
     val state by viewModel.state.collectAsState()
-    ViolationsScreenContent(state)
+    ViolationsScreenContent(
+        state,
+        onViolationTypeClicked,
+    )
 }
 
 @Composable
-fun ViolationsScreenContent(state: ViolationsListState) {
+fun ViolationsScreenContent(
+    state: ViolationsListState,
+    onViolationTypeClicked: (ViolationType) -> Unit = {},
+) {
     Box(
         modifier = Modifier
             .background(DarkGray)
@@ -56,13 +63,9 @@ fun ViolationsScreenContent(state: ViolationsListState) {
                 fontSize = 18.sp,
                 text = stringResource(R.string.distinct_violations_format, state.violations.size),
             )
-            ViolationsList(state.violations.toImmutableList())
-        }
-
-        if (state.loading) {
-            CircularProgressIndicator(
-                modifier = Modifier.width(64.dp),
-                color = PrimaryRed,
+            ViolationsList(
+                state.violations.toImmutableList(),
+                onClick = { onViolationTypeClicked(it.type) },
             )
         }
     }
@@ -74,32 +77,13 @@ fun ViolationsScreenContentPreview() {
     ViolationsScreenContent(
         ViolationsListState(
             violations = listOf(
-                ViolationQuantity(1, "Name"),
-                ViolationQuantity(10, "Name"),
-                ViolationQuantity(123, "Name"),
-                ViolationQuantity(1234, "Name"),
-                ViolationQuantity(112, "Name"),
-                ViolationQuantity(90, "Name"),
-                ViolationQuantity(7, "Name"),
-            )
-        )
-    )
-}
-
-@Preview
-@Composable
-fun ViolationsScreenContentPreviewLoading() {
-    ViolationsScreenContent(
-        ViolationsListState(
-            loading = true,
-            violations = listOf(
-                ViolationQuantity(1, "Name"),
-                ViolationQuantity(10, "Name"),
-                ViolationQuantity(123, "Name"),
-                ViolationQuantity(1234, "Name"),
-                ViolationQuantity(112, "Name"),
-                ViolationQuantity(90, "Name"),
-                ViolationQuantity(7, "Name"),
+                ViolationQuantity(1, ViolationType("Name")),
+                ViolationQuantity(10, ViolationType("Name")),
+                ViolationQuantity(123, ViolationType("Name")),
+                ViolationQuantity(1234, ViolationType("Name")),
+                ViolationQuantity(112, ViolationType("Name")),
+                ViolationQuantity(90, ViolationType("Name")),
+                ViolationQuantity(7, ViolationType("Name")),
             )
         )
     )

@@ -2,4 +2,6 @@
 <resources>
     <string name="strictpro_shortcut_label">StrictPro</string>
     <string name="distinct_violations_format">%d Distinct Violations</string>
+    <string name="violations">Violations</string>
+    <string name="history">History</string>
 </resources>
