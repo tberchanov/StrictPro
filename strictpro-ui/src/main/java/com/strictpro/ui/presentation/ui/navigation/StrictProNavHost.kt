@@ -4,8 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.strictpro.ui.presentation.violations.details.navigation.violationDetailsScreen
+import com.strictpro.ui.presentation.violations.history.navigation.historyFullScreen
 import com.strictpro.ui.presentation.violations.history.navigation.historyScreen
-import com.strictpro.ui.presentation.violations.history.navigation.navigateToHistory
+import com.strictpro.ui.presentation.violations.history.navigation.navigateToHistoryFull
 import com.strictpro.ui.presentation.violations.list.navigation.ViolationsScreenRoute
 import com.strictpro.ui.presentation.violations.list.navigation.violationsScreen
 
@@ -15,10 +16,11 @@ fun StrictProNavHost(
 ) {
     NavHost(
         navController,
-        startDestination = ViolationsScreenRoute,
+        startDestination = ViolationsScreenRoute(),
     ) {
-        violationsScreen(navController::navigateToHistory)
+        violationsScreen(navController::navigateToHistoryFull)
         historyScreen()
+        historyFullScreen()
         violationDetailsScreen()
     }
 }
