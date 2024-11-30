@@ -2,7 +2,7 @@ package com.strictpro.ui.domain.usecase
 
 import android.content.Context
 
-class GetAppPackageNameUseCase(
+internal class GetAppPackageNameUseCase(
     private val context: Context,
 ) {
 

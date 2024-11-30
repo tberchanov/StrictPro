@@ -4,4 +4,6 @@
     <string name="distinct_violations_format">%d Distinct Violations</string>
     <string name="violations">Violations</string>
     <string name="history">History</string>
+    <string name="total_violations_format">%d Total Violations</string>
+    <string name="violations_format">%d %s</string>
 </resources>

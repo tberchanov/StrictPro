@@ -6,10 +6,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.strictpro.ui.data.LocalViolationDataSource
 import com.strictpro.ui.data.ViolationRepositoryImpl
-import com.strictpro.ui.domain.usecase.GetViolationsQuantityUseCase
 import com.strictpro.ui.domain.ViolationRepository
 import com.strictpro.ui.domain.usecase.GetAppPackageNameUseCase
+import com.strictpro.ui.domain.usecase.GetViolationsQuantityUseCase
 import com.strictpro.ui.domain.usecase.GetViolationsUseCase
+import com.strictpro.ui.presentation.util.StringProvider
 import com.strictpro.ui.presentation.violations.history.viewmodel.ViolationsHistoryViewModel
 import com.strictpro.ui.presentation.violations.list.viewmodel.ViolationsViewModel
 import org.koin.android.ext.koin.androidContext
@@ -21,7 +22,7 @@ internal val Context.violationsDataStore: DataStore<Preferences> by preferencesD
 internal val dataModule = module {
     single { androidContext().violationsDataStore }
     single { LocalViolationDataSource(get()) }
-    single< ViolationRepository> { ViolationRepositoryImpl(get()) }
+    single<ViolationRepository> { ViolationRepositoryImpl(get()) }
 }
 
 internal val domainModule = module {
@@ -31,8 +32,17 @@ internal val domainModule = module {
 }
 
 internal val viewModelModule = module {
-    viewModel { ViolationsViewModel(get()) }
-    viewModel { ViolationsHistoryViewModel(get(), get()) }
+    viewModel { ViolationsViewModel(get(), get()) }
+    viewModel { ViolationsHistoryViewModel(get(), get(), get()) }
 }
 
-internal val appModules = listOf(dataModule, domainModule, viewModelModule)
+internal val presentationModule = module {
+    single { StringProvider(androidContext()) }
+}
+
+internal val appModules = listOf(
+    dataModule,
+    domainModule,
+    viewModelModule,
+    presentationModule,
+)

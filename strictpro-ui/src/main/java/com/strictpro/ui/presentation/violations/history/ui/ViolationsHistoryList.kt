@@ -5,7 +5,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.strictpro.ui.presentation.ui.ListItemHorizontalPadding
+import com.strictpro.ui.presentation.ui.ListItemVerticalPadding
 import com.strictpro.ui.presentation.violations.history.model.ViolationHistoryItemUI
 import com.strictpro.ui.presentation.violations.history.util.formatViolationDate
 import kotlinx.collections.immutable.ImmutableList
@@ -13,14 +14,18 @@ import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 internal fun ViolationsHistoryList(violations: ImmutableList<ViolationHistoryItemUI>) {
-    LazyColumn {
+    LazyColumn(modifier = Modifier.padding(bottom = ListItemVerticalPadding)) {
         items(
             violations.size,
             key = { violations[it].dateMillis },
         ) { index ->
             // TODO on click open Violation details of the selected type
             ViolationHistoryItem(
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                modifier = Modifier.padding(
+                    start = ListItemHorizontalPadding,
+                    end = ListItemHorizontalPadding,
+                    top = ListItemVerticalPadding,
+                ),
                 violationHistoryItemUI = violations[index],
             )
         }

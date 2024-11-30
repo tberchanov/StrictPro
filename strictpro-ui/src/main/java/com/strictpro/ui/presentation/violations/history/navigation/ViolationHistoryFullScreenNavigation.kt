@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.strictpro.ui.domain.model.ViolationType
-import com.strictpro.ui.presentation.violations.history.ui.HistoryFullScreen
+import com.strictpro.ui.presentation.violations.history.ui.HistoryScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,7 +19,7 @@ fun NavController.navigateToHistoryFull(violationType: ViolationType?) =
 fun NavGraphBuilder.historyFullScreen() {
     composable<HistoryFullScreenRoute> {
         val args = it.toRoute<HistoryFullScreenRoute>()
-        HistoryFullScreen(
+        HistoryScreen(
             violationType = args.violationTypeValue?.let(::ViolationType),
         )
     }

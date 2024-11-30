@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 
-class GetViolationsQuantityUseCase(
+internal class GetViolationsQuantityUseCase(
     private val violationRepository: ViolationRepository,
 ) {
 
