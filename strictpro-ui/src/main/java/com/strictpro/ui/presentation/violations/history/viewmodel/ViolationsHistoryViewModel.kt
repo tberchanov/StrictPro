@@ -1,6 +1,5 @@
 package com.strictpro.ui.presentation.violations.history.viewmodel
 
-import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strictpro.ui.domain.model.StrictProViolation
@@ -11,6 +10,7 @@ import com.strictpro.ui.presentation.util.StringProvider
 import com.strictpro.ui.presentation.util.snackbar.snackbarCoroutineExceptionHandler
 import com.strictpro.ui.presentation.violations.history.model.ViolationHistoryItemUI
 import com.strictpro.ui.presentation.violations.history.model.toViolationHistoryItemUI
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -30,7 +30,7 @@ internal class ViolationsHistoryViewModel(
     fun loadData(
         violationType: ViolationType?,
     ) {
-        viewModelScope.launch(snackbarCoroutineExceptionHandler) {
+        viewModelScope.launch(Dispatchers.IO + snackbarCoroutineExceptionHandler) {
             getViolationsUseCase.execute(violationType)
                 .map { it.toViolationHistoryItemUI(packageName) }
                 .collect { historyItems ->
@@ -58,7 +58,6 @@ internal class ViolationsHistoryViewModel(
     }
 }
 
-@Stable
 data class ViolationsHistoryState(
     val title: String = "",
     val historyItems: List<ViolationHistoryItemUI> = emptyList(),

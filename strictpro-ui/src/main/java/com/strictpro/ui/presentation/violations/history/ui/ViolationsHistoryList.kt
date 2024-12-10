@@ -13,13 +13,15 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal fun ViolationsHistoryList(violations: ImmutableList<ViolationHistoryItemUI>) {
+internal fun ViolationsHistoryList(
+    violations: ImmutableList<ViolationHistoryItemUI>,
+    onClick: (ViolationHistoryItemUI) -> Unit = {},
+) {
     LazyColumn(modifier = Modifier.padding(bottom = ListItemVerticalPadding)) {
         items(
             violations.size,
             key = { violations[it].dateMillis },
         ) { index ->
-            // TODO on click open Violation details of the selected type
             ViolationHistoryItem(
                 modifier = Modifier.padding(
                     start = ListItemHorizontalPadding,
@@ -27,6 +29,7 @@ internal fun ViolationsHistoryList(violations: ImmutableList<ViolationHistoryIte
                     top = ListItemVerticalPadding,
                 ),
                 violationHistoryItemUI = violations[index],
+                onClick = onClick
             )
         }
     }
@@ -41,6 +44,7 @@ private fun ViolationsHistoryListPreview() {
     ViolationsHistoryList(
         listOf(
             ViolationHistoryItemUI(
+                violationId = "0",
                 dateMillis = 0,
                 formattedDate = formatViolationDate(0),
                 violationName = "Violation info",
@@ -51,6 +55,7 @@ private fun ViolationsHistoryListPreview() {
                 ),
             ),
             ViolationHistoryItemUI(
+                violationId = "0",
                 dateMillis = 1,
                 formattedDate = formatViolationDate(System.currentTimeMillis()),
                 violationName = "Violation info",
@@ -61,6 +66,7 @@ private fun ViolationsHistoryListPreview() {
                 ),
             ),
             ViolationHistoryItemUI(
+                violationId = "0",
                 dateMillis = 2,
                 formattedDate = formatViolationDate(3000),
                 violationName = "Violation info",
@@ -71,6 +77,7 @@ private fun ViolationsHistoryListPreview() {
                 ),
             ),
             ViolationHistoryItemUI(
+                violationId = "0",
                 dateMillis = 3,
                 formattedDate = formatViolationDate(1000),
                 violationName = "Violation info",

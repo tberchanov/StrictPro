@@ -3,6 +3,7 @@ package com.strictpro.ui.presentation.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.strictpro.ui.presentation.violations.details.navigation.navigateToViolationDetails
 import com.strictpro.ui.presentation.violations.details.navigation.violationDetailsScreen
 import com.strictpro.ui.presentation.violations.history.navigation.historyFullScreen
 import com.strictpro.ui.presentation.violations.history.navigation.historyScreen
@@ -18,9 +19,15 @@ fun StrictProNavHost(
         navController,
         startDestination = ViolationsScreenRoute(),
     ) {
-        violationsScreen(navController::navigateToHistoryFull)
-        historyScreen()
-        historyFullScreen()
+        violationsScreen(
+            onViolationTypeClicked = navController::navigateToHistoryFull,
+        )
+        historyScreen(
+            onViolationClick = navController::navigateToViolationDetails,
+        )
+        historyFullScreen(
+            onViolationClick = navController::navigateToViolationDetails,
+        )
         violationDetailsScreen()
     }
 }

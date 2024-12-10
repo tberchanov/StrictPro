@@ -17,7 +17,6 @@ internal class GetViolationsUseCase(
         return if (VERSION.SDK_INT >= VERSION_CODES.P) {
             violationRepository.observeViolations().map { violationsList ->
                 violationsList
-                    .asSequence()
                     .filter { violation ->
                         if (violationType == null) {
                             true
@@ -25,8 +24,7 @@ internal class GetViolationsUseCase(
                             violation.violation::class.java.simpleName == violationType.value
                         }
                     }
-                    .sortedBy { it.dateMillis }
-                    .toList()
+                    .sortedByDescending { it.dateMillis }
             }
         } else {
             emptyFlow()

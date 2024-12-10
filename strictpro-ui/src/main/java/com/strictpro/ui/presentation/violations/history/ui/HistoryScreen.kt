@@ -26,17 +26,19 @@ import org.koin.androidx.compose.koinViewModel
 internal fun HistoryScreen(
     viewModel: ViolationsHistoryViewModel = koinViewModel(),
     violationType: ViolationType? = null,
+    onHistoryItemClick: (ViolationHistoryItemUI) -> Unit = {},
 ) {
     LaunchedEffect(Unit) {
         viewModel.loadData(violationType)
     }
     val state by viewModel.state.collectAsStateWithLifecycle()
-    HistoryScreenContent(state)
+    HistoryScreenContent(state, onHistoryItemClick)
 }
 
 @Composable
 internal fun HistoryScreenContent(
     violationsHistoryState: ViolationsHistoryState,
+    onHistoryItemClick: (ViolationHistoryItemUI) -> Unit = {},
 ) {
     Scaffold(
         backgroundColor = DarkGray,
@@ -60,7 +62,10 @@ internal fun HistoryScreenContent(
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            ViolationsHistoryList(violationsHistoryState.historyItems.toImmutableList())
+            ViolationsHistoryList(
+                violationsHistoryState.historyItems.toImmutableList(),
+                onClick = onHistoryItemClick,
+            )
         }
     }
 }
@@ -79,6 +84,7 @@ private fun HistoryScreenContentPreview() {
                     "Stack trace item 2",
                     "Stack trace item 3",
                 ),
+                violationId = "0",
             ),
             ViolationHistoryItemUI(
                 dateMillis = 1,
@@ -89,6 +95,7 @@ private fun HistoryScreenContentPreview() {
                     "Stack trace item 2",
                     "Stack trace item 3",
                 ),
+                violationId = "0",
             ),
             ViolationHistoryItemUI(
                 dateMillis = 2,
@@ -99,6 +106,7 @@ private fun HistoryScreenContentPreview() {
                     "Stack trace item 2",
                     "Stack trace item 3",
                 ),
+                violationId = "0",
             ),
             ViolationHistoryItemUI(
                 dateMillis = 3,
@@ -109,6 +117,7 @@ private fun HistoryScreenContentPreview() {
                     "Stack trace item 2",
                     "Stack trace item 3",
                 ),
+                violationId = "0",
             ),
         )
     }

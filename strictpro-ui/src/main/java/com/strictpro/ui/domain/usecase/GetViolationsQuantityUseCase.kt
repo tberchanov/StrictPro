@@ -21,6 +21,7 @@ internal class GetViolationsQuantityUseCase(
                     .map { (violationClassName, violations) ->
                         ViolationQuantity(violations.size, ViolationType(violationClassName))
                     }
+                    .sortedByDescending { it.quantity }
             }
         } else {
             emptyFlow()

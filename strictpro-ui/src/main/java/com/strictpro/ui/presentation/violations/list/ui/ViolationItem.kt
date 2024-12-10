@@ -28,10 +28,10 @@ import com.strictpro.ui.presentation.ui.theme.AccentRed
 import com.strictpro.ui.presentation.ui.theme.PrimaryRed
 
 @Composable
-internal inline fun ViolationItem(
+internal fun ViolationItem(
     violationsQuantity: ViolationQuantity,
     modifier: Modifier = Modifier,
-    crossinline onClick: (ViolationQuantity) -> Unit = {},
+    onClick: (ViolationQuantity) -> Unit = {},
 ) {
     Box(
         modifier = modifier

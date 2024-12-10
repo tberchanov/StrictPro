@@ -9,18 +9,23 @@ import com.strictpro.ui.presentation.violations.history.ui.HistoryScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class HistoryFullScreenRoute(
+internal data class HistoryFullScreenRoute(
     val violationTypeValue: String? = null,
 )
 
-fun NavController.navigateToHistoryFull(violationType: ViolationType?) =
+internal fun NavController.navigateToHistoryFull(violationType: ViolationType?) =
     navigate(route = HistoryFullScreenRoute(violationType?.value))
 
-fun NavGraphBuilder.historyFullScreen() {
+internal fun NavGraphBuilder.historyFullScreen(
+    onViolationClick: (violationId: String) -> Unit = {},
+) {
     composable<HistoryFullScreenRoute> {
         val args = it.toRoute<HistoryFullScreenRoute>()
         HistoryScreen(
             violationType = args.violationTypeValue?.let(::ViolationType),
+            onHistoryItemClick = { historyItem ->
+                onViolationClick(historyItem.violationId)
+            },
         )
     }
 }

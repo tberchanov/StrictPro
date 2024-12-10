@@ -2,7 +2,9 @@ package com.strictpro.ui.presentation.violations.history.model
 
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import android.os.strictmode.Violation
 import com.strictpro.ui.domain.model.StrictProViolation
+import com.strictpro.ui.domain.model.getViolationName
 import com.strictpro.ui.presentation.violations.history.util.formatViolationDate
 
 data class ViolationHistoryItemUI(
@@ -10,6 +12,7 @@ data class ViolationHistoryItemUI(
     val formattedDate: String,
     val violationName: String,
     val filteredStackTraceItems: List<String>,
+    val violationId: String,
 )
 
 fun StrictProViolation.toViolationHistoryItemUI(packageName: String): ViolationHistoryItemUI {
@@ -25,16 +28,11 @@ fun StrictProViolation.toViolationHistoryItemUI(packageName: String): ViolationH
         emptyList()
     }
 
-    val violationName = if (VERSION.SDK_INT >= VERSION_CODES.P) {
-        violation::class.java.simpleName
-    } else {
-        ""
-    }
-
     return ViolationHistoryItemUI(
         dateMillis = dateMillis,
         formattedDate = formattedDate,
-        violationName = violationName,
+        violationName = getViolationName(),
         filteredStackTraceItems = filteredStackTraceItems,
+        violationId = id,
     )
 }

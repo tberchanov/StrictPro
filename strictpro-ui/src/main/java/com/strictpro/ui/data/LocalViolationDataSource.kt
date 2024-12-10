@@ -31,6 +31,7 @@ class LocalViolationDataSource(
             val sortedKeys = prefsMap.keys.sortedBy { it.name.toLong() }
             sortedKeys.mapNotNull { key ->
                 createStrictProViolation(
+                    id = key.name,
                     dateMillis = key.name.toLong(),
                     violationBytes = prefsMap[key] as? ByteArray?,
                 )
@@ -39,11 +40,13 @@ class LocalViolationDataSource(
     }
 
     private fun createStrictProViolation(
+        id: String,
         dateMillis: Long,
         violationBytes: ByteArray?,
     ): StrictProViolation? {
         return violationBytes?.let {
             StrictProViolation(
+                id = id,
                 dateMillis = dateMillis,
                 violation = deserializeViolation(violationBytes)
             )

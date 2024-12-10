@@ -13,9 +13,9 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-internal inline fun ViolationsList(
+internal fun ViolationsList(
     violations: ImmutableList<ViolationQuantity>,
-    crossinline onClick: (ViolationQuantity) -> Unit = {},
+    onClick: (ViolationQuantity) -> Unit = {},
 ) {
     LazyColumn(modifier = Modifier.padding(bottom = ListItemVerticalPadding)) {
         items(
