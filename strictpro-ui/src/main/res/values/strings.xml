@@ -6,4 +6,6 @@
     <string name="history">History</string>
     <string name="total_violations_format">%d Total Violations</string>
     <string name="violations_format">%d %s</string>
+    <string name="print_trace_to_logcat">Print trace to logcat</string>
+    <string name="print_base64_to_logcat">Print base64 to logcat</string>
 </resources>

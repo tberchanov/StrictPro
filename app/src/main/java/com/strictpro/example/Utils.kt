@@ -26,8 +26,8 @@ private val mainExecutor = ExecutorCompat.create(Handler(Looper.getMainLooper())
 fun buildDefaultThreadPolicy(context: Context) = StrictPro.ThreadPolicy.Builder()
     .detectAll()
     .penaltyLog()
-    .penaltyDialog()
-    .penaltyFlashScreen()
+//    .penaltyDialog()
+//    .penaltyFlashScreen()
     .setWhiteList {
 
     }
@@ -40,8 +40,8 @@ fun buildDefaultThreadPolicy(context: Context) = StrictPro.ThreadPolicy.Builder(
 fun buildDefaultVmPolicy(context: Context) = StrictPro.VmPolicy.Builder()
     .detectAll()
     .penaltyLog()
-    .penaltyDialog()
-    .penaltyFlashScreen()
+//    .penaltyDialog()
+//    .penaltyFlashScreen()
     .penaltyListener(mainExecutor, StrictProUiPenaltyListener.create())
     .setWhiteList {
 

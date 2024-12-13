@@ -2,7 +2,7 @@ package com.strictpro.utils
 
 import android.util.Base64
 
-internal object Base64Util {
+object Base64Util {
     fun encodeToString(input: String): String {
         return Base64.encodeToString(input.toByteArray(), Base64.NO_WRAP)
     }

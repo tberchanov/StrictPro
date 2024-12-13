@@ -74,6 +74,7 @@ internal fun ViolationHistoryItem(
 internal fun StackTraceItems(
     stackTraceItems: List<String>,
     modifier: Modifier = Modifier,
+    cutLast: Boolean = false,
 ) {
     val localDensity = LocalDensity.current
     Column(modifier = modifier) {
@@ -90,6 +91,7 @@ internal fun StackTraceItems(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 StackTraceItemMarker(
+                    cutBottom = cutLast && stackTraceItems.last() == item,
                     modifier = Modifier
                         .size(width = 30.dp, height = columnHeightDp)
                         .padding(end = 8.dp),
@@ -109,20 +111,22 @@ internal fun StackTraceItems(
 @Preview
 @Composable
 private fun StackTraceItemMarkerPreview() {
-    StackTraceItemMarker(modifier = Modifier.size(240.dp))
+    StackTraceItemMarker(modifier = Modifier.size(240.dp), cutBottom = true)
 }
 
 @Composable
 internal fun StackTraceItemMarker(
+    cutBottom: Boolean = false,
     modifier: Modifier = Modifier,
     color: Color = Color.Red,
     thickness: Dp = 2.dp,
 ) {
+    val cutBottomCoefficient = if (cutBottom) 2 else 1
     Canvas(modifier = modifier) {
         drawLine(
             color = color,
             start = Offset(thickness.toPx(), 0F),
-            end = Offset(thickness.toPx(), size.height),
+            end = Offset(thickness.toPx(), size.height / cutBottomCoefficient),
             strokeWidth = thickness.toPx(),
         )
         drawLine(
