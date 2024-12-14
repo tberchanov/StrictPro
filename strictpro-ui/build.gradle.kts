@@ -56,7 +56,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material)
     implementation(libs.kotlinx.serialization.json)
-    debugImplementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.ui.tooling)
     implementation(libs.kotlinx.collections.immutable)
 }
