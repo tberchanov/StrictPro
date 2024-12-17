@@ -24,3 +24,24 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+
+  check-changelog:
+    name: Ensure CHANGELOG.md is Updated
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Check for CHANGELOG.md changes
+        run: |
+          # Fetch the base branch to compare changes
+          git fetch origin ${{ github.base_ref }} --depth=1
+
+          # Check if CHANGELOG.md has been modified
+          if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q "CHANGELOG.md"; then
+            echo "CHANGELOG.md has been updated."
+          else
+            echo "Error: CHANGELOG.md was not updated. Please update the CHANGELOG."
+            exit 1
+          fi
