@@ -27,6 +27,7 @@ jobs:
 
   check-changelog:
     name: Ensure CHANGELOG.md is Updated
+    if: github.event_name == 'pull_request' # Run only on pull_request events
     runs-on: ubuntu-latest
 
     steps:

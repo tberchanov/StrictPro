@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Setup CI/CD with GitHub Actions
+- Setup CI/CD with GitHub Actions.
+- Run `check-changelog` only on `pull_request`.
 
 ### Fixed
 
