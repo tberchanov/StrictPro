@@ -64,6 +64,9 @@ dependencies {
 
     implementation(project(":strictpro"))
     implementation(project(":strictpro-ui"))
+//    val libVersion = "0.1.0-preview.1"
+//    implementation("com.github.tberchanov.StrictPro:strictpro:$libVersion")
+//    implementation("com.github.tberchanov.StrictPro:strictpro.ui:$libVersion")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.mockk)
