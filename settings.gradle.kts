@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 rootProject.name = "StrictPro"
 include(":app")
 include(":strictpro")
+include(":strictpro-ui")

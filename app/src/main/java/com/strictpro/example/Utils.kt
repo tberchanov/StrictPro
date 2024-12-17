@@ -11,6 +11,8 @@ import android.os.StrictMode
 import android.util.Log
 import androidx.core.os.ExecutorCompat
 import com.strictpro.StrictPro
+import com.strictpro.ui.StrictProUiPenaltyListener
+import com.strictpro.ui.penaltyListener
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -24,14 +26,12 @@ private val mainExecutor = ExecutorCompat.create(Handler(Looper.getMainLooper())
 fun buildDefaultThreadPolicy(context: Context) = StrictPro.ThreadPolicy.Builder()
     .detectAll()
     .penaltyLog()
-    .penaltyDialog()
-    .penaltyFlashScreen()
+//    .penaltyDialog()
+//    .penaltyFlashScreen()
     .setWhiteList {
 
     }
-//    .penaltyListener(mainExecutor) { violation ->
-//        Log.d("StrictPro", "thread penaltyListener1", violation)
-//    }
+    .penaltyListener(mainExecutor, StrictProUiPenaltyListener.create())
 //    .penaltyListener(mainExecutor) { violation ->
 //        Log.d("StrictPro", "thread penaltyListener2", violation)
 //    }
@@ -40,8 +40,9 @@ fun buildDefaultThreadPolicy(context: Context) = StrictPro.ThreadPolicy.Builder(
 fun buildDefaultVmPolicy(context: Context) = StrictPro.VmPolicy.Builder()
     .detectAll()
     .penaltyLog()
-    .penaltyDialog()
-    .penaltyFlashScreen()
+//    .penaltyDialog()
+//    .penaltyFlashScreen()
+    .penaltyListener(mainExecutor, StrictProUiPenaltyListener.create())
     .setWhiteList {
 
     }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StrictPro</string>
+    <string name="app_name">StrictPro Sample</string>
     <string name="Trigger_DiskReadViolation">Trigger DiskReadViolation</string>
     <string name="Trigger_CustomViolation">Trigger CustomViolation</string>
     <string name="Trigger_ExplicitGcViolation">Trigger ExplicitGcViolation</string>

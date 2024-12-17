@@ -1,16 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.strictpro.example"
-    compileSdk = 34
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.strictpro"
-        minSdk = 21
-        targetSdk = 34
+        applicationId = "com.strictpro.example"
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.compileSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
 
@@ -62,6 +63,10 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(project(":strictpro"))
+    implementation(project(":strictpro-ui"))
+//    val libVersion = "0.1.0-preview.1"
+//    implementation("com.github.tberchanov.StrictPro:strictpro:$libVersion")
+//    implementation("com.github.tberchanov.StrictPro:strictpro.ui:$libVersion")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.mockk)
@@ -73,4 +78,7 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // TODO remove
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
 }

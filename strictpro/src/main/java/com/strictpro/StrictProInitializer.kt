@@ -9,6 +9,7 @@ internal class StrictProInitializer : Initializer<StrictPro> {
         StrictPro.listenActivities(context)
         return StrictPro
     }
+
     override fun dependencies(): List<Class<out Initializer<*>>> {
         // No dependencies on other libraries.
         return emptyList()

@@ -103,7 +103,7 @@ Future plans / TODO ⏳:
 
 * Implement more penalties executors: NotificationPenaltyExecutor, ToastPenaltyExecutor, VibrationPenaltyExecutor, SoundPenaltyExecutor.
 
-* Add screen with UI about StrictMode penalties.
+* StrictPro UI, add import/export violations feature.
 
 Useful Resources 📚
 ---
