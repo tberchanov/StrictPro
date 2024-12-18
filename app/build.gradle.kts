@@ -62,8 +62,12 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    implementation(project(":strictpro"))
-    implementation(project(":strictpro-ui"))
+    debugImplementation(project(":strictpro"))
+    releaseImplementation(project(":strictpro-stubs"))
+
+    debugImplementation(project(":strictpro-ui"))
+    releaseImplementation(project(":strictpro-ui-stubs"))
+
 //    val libVersion = "0.1.0-preview.1"
 //    implementation("com.github.tberchanov.StrictPro:strictpro:$libVersion")
 //    implementation("com.github.tberchanov.StrictPro:strictpro.ui:$libVersion")

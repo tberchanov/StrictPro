@@ -8,7 +8,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
-object ViolationSaver : KoinComponent {
+internal object ViolationSaver : KoinComponent {
 
     private val violationRepository by lazy { getKoin().get<ViolationRepository>() }
 
