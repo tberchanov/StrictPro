@@ -12,7 +12,7 @@ internal data class ViolationDetailsScreenRoute(
     val violationId: String,
 )
 
-fun NavGraphBuilder.violationDetailsScreen() {
+internal fun NavGraphBuilder.violationDetailsScreen() {
     composable<ViolationDetailsScreenRoute> {
         val args = it.toRoute<ViolationDetailsScreenRoute>()
         ViolationDetailsScreen(violationId = args.violationId)

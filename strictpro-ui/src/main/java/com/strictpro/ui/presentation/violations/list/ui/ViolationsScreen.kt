@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.strictpro.ui.domain.model.ViolationQuantity
 import com.strictpro.ui.domain.model.ViolationType
+import com.strictpro.ui.presentation.ui.common.NoViolations
 import com.strictpro.ui.presentation.ui.theme.DarkGray
 import com.strictpro.ui.presentation.violations.list.viewmodel.ViolationsListState
 import com.strictpro.ui.presentation.violations.list.viewmodel.ViolationsViewModel
@@ -40,21 +41,25 @@ internal fun ViolationsScreenContent(
     state: ViolationsListState,
     onViolationTypeClicked: (ViolationType) -> Unit = {},
 ) {
-    Scaffold(
-        backgroundColor = DarkGray,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = state.title)
-                },
-            )
-        }
-    ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            ViolationsList(
-                state.violations.toImmutableList(),
-                onClick = { onViolationTypeClicked(it.type) },
-            )
+    if (state.violations.isEmpty()) {
+        NoViolations()
+    } else {
+        Scaffold(
+            backgroundColor = DarkGray,
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = state.title)
+                    },
+                )
+            }
+        ) { innerPadding ->
+            Column(modifier = Modifier.padding(innerPadding)) {
+                ViolationsList(
+                    state.violations.toImmutableList(),
+                    onClick = { onViolationTypeClicked(it.type) },
+                )
+            }
         }
     }
 }

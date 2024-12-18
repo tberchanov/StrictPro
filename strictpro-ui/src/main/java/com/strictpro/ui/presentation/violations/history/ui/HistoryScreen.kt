@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.strictpro.ui.domain.model.ViolationType
 import com.strictpro.ui.presentation.ui.common.BackButton
+import com.strictpro.ui.presentation.ui.common.NoViolations
 import com.strictpro.ui.presentation.ui.theme.DarkGray
 import com.strictpro.ui.presentation.violations.history.model.ViolationHistoryItemUI
 import com.strictpro.ui.presentation.violations.history.viewmodel.ViolationsHistoryState
@@ -40,32 +41,36 @@ internal fun HistoryScreenContent(
     violationsHistoryState: ViolationsHistoryState,
     onHistoryItemClick: (ViolationHistoryItemUI) -> Unit = {},
 ) {
-    Scaffold(
-        backgroundColor = DarkGray,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = violationsHistoryState.title,
-                    )
-                },
-                navigationIcon = if (violationsHistoryState.showBackButton) {
-                    { BackButton() }
-                } else {
-                    null
-                }
-            )
-        },
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            ViolationsHistoryList(
-                violationsHistoryState.historyItems.toImmutableList(),
-                onClick = onHistoryItemClick,
-            )
+    if (violationsHistoryState.historyItems.isEmpty()) {
+        NoViolations()
+    } else {
+        Scaffold(
+            backgroundColor = DarkGray,
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = violationsHistoryState.title,
+                        )
+                    },
+                    navigationIcon = if (violationsHistoryState.showBackButton) {
+                        { BackButton() }
+                    } else {
+                        null
+                    }
+                )
+            },
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                ViolationsHistoryList(
+                    violationsHistoryState.historyItems.toImmutableList(),
+                    onClick = onHistoryItemClick,
+                )
+            }
         }
     }
 }

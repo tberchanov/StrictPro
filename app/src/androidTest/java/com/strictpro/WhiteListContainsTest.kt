@@ -5,7 +5,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import com.strictpro.StrictPro.VisibleForTestingOnly
-import com.strictpro.example.ExampleContent
+import com.strictpro.example.ContentScreen
 import com.strictpro.example.R
 import com.strictpro.penalty.ViolationPenalty
 import com.strictpro.penalty.executor.PenaltyExecutor
@@ -38,7 +38,7 @@ class WhiteListContainsTest : VisibleForTestingOnly {
         )
 
         composeTestRule.setContent {
-            ExampleContent(
+            ContentScreen(
                 threadPolicy = StrictPro.ThreadPolicy.Builder()
                     .detectAll()
                     .penaltyLog()
@@ -96,7 +96,7 @@ class WhiteListContainsTest : VisibleForTestingOnly {
         )
 
         composeTestRule.setContent {
-            ExampleContent(
+            ContentScreen(
                 threadPolicy = StrictPro.ThreadPolicy.Builder()
                     .detectAll()
                     .penaltyLog()

@@ -62,7 +62,7 @@ object ShortcutUtil {
         context: Context,
         firstLauncherActivityLabel: String?,
     ): Pair<String, String> {
-        val label = context.getString(R.string.strictpro_shortcut_label)
+        val label = context.getString(R.string.strictpro)
 
         if (firstLauncherActivityLabel == null) {
             return label to label

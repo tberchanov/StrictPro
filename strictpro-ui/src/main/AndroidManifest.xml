@@ -16,6 +16,8 @@
         <activity
             android:name=".presentation.ui.StrictProUiActivity"
             android:exported="true"
+            android:label="@string/strictproui"
+            android:launchMode="singleTask"
             android:taskAffinity="com.strictpro.ui.${applicationId}"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 

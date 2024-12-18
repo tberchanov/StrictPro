@@ -23,7 +23,7 @@ import com.strictpro.ui.presentation.ui.theme.DarkGray
 import com.strictpro.ui.presentation.util.snackbar.SnackbarController
 import com.strictpro.ui.presentation.util.snackbar.observeSnackbars
 
-internal class StrictProUiActivity : ComponentActivity() {
+class StrictProUiActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

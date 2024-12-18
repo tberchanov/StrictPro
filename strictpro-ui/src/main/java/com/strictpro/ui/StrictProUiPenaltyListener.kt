@@ -40,6 +40,12 @@ open class StrictProUiPenaltyListener private constructor() {
     internal object StrictProUiPenaltyListenerStub : StrictProUiPenaltyListener()
 }
 
+/**
+ * Call #{@link OnVmViolationListener#onVmViolation(Violation)} on specified
+ * executor every violation.
+ *
+ * Call requires API level 28 or higher, otherwise it will be ignored.
+ */
 fun StrictPro.VmPolicy.Builder.penaltyListener(
     executor: Executor,
     listener: StrictProUiPenaltyListener,
@@ -53,6 +59,12 @@ fun StrictPro.VmPolicy.Builder.penaltyListener(
     }
 }
 
+/**
+ * Call #{@link OnThreadViolationListener#onThreadViolation(Violation)} on specified
+ * executor every violation.
+ *
+ * Call requires API level 28 or higher, otherwise it will be ignored.
+ */
 fun StrictPro.ThreadPolicy.Builder.penaltyListener(
     executor: Executor,
     listener: StrictProUiPenaltyListener,

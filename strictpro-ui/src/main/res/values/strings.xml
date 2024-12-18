@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="strictpro_shortcut_label">StrictPro</string>
+    <string name="strictpro">StrictPro</string>
+    <string name="strictproui">StrictProUI</string>
     <string name="distinct_violations_format">%d Distinct Violations</string>
     <string name="violations">Violations</string>
     <string name="history">History</string>
@@ -8,4 +9,8 @@
     <string name="violations_format">%d %s</string>
     <string name="print_trace_to_logcat">Print trace to logcat</string>
     <string name="print_base64_to_logcat">Print base64 to logcat</string>
+    <string name="no_violations">No violations</string>
+    <string name="that_is_good">That is good 😎</string>
+    <string name="current_api_format">Current device API level is %d</string>
+    <string name="please_run_above_api_28">Please run the app on a device\nwith API level 28 or above.</string>
 </resources>
