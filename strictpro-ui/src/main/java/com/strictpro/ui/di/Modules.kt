@@ -7,6 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.strictpro.ui.data.LocalViolationDataSource
 import com.strictpro.ui.data.ViolationRepositoryImpl
 import com.strictpro.ui.domain.ViolationRepository
+import com.strictpro.ui.domain.usecase.FilterStackTraceUseCase
 import com.strictpro.ui.domain.usecase.GetAppPackageNameUseCase
 import com.strictpro.ui.domain.usecase.GetViolationUseCase
 import com.strictpro.ui.domain.usecase.GetViolationsQuantityUseCase
@@ -32,12 +33,13 @@ internal val domainModule = module {
     factory { GetViolationsUseCase(get()) }
     factory { GetAppPackageNameUseCase(androidContext()) }
     factory { GetViolationUseCase(get()) }
+    factory { FilterStackTraceUseCase(get()) }
 }
 
 internal val viewModelModule = module {
     viewModel { ViolationsViewModel(get(), get()) }
     viewModel { ViolationsHistoryViewModel(get(), get(), get()) }
-    viewModel { ViolationDetailsViewModel(get()) }
+    viewModel { ViolationDetailsViewModel(get(), get()) }
 }
 
 internal val presentationModule = module {

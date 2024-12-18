@@ -1,5 +1,6 @@
 package com.strictpro.ui.presentation.violations.details.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -18,10 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.strictpro.ui.R
 import com.strictpro.ui.presentation.ui.common.BackButton
+import com.strictpro.ui.presentation.ui.common.StackTraceItems
 import com.strictpro.ui.presentation.ui.theme.DarkGray
 import com.strictpro.ui.presentation.violations.details.viewmodel.ViolationDetailsState
 import com.strictpro.ui.presentation.violations.details.viewmodel.ViolationDetailsViewModel
-import com.strictpro.ui.presentation.violations.history.ui.StackTraceItems
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -73,9 +74,11 @@ internal fun ViolationDetailsScreenContent(
             StackTraceItems(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 4.dp),
+                    .padding(horizontal = 4.dp)
+                    .padding(bottom = 18.dp),
                 stackTraceItems = violationDetailsState.trace,
                 cutLast = true,
+                highlightPredicate = { violationDetailsState.highlightedTrace.contains(it) },
             )
         }
     }

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.strictpro.ui.domain.model.StrictProViolation
 import com.strictpro.ui.domain.model.getViolationName
+import com.strictpro.ui.domain.usecase.FilterStackTraceUseCase
 import com.strictpro.ui.domain.usecase.GetViolationUseCase
 import com.strictpro.ui.presentation.util.snackbar.snackbarCoroutineExceptionHandler
 import com.strictpro.utils.Base64Util
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 
 internal class ViolationDetailsViewModel(
     private val getViolationUseCase: GetViolationUseCase,
+    private val filterStackTraceUseCase: FilterStackTraceUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ViolationDetailsState())
@@ -31,6 +33,7 @@ internal class ViolationDetailsViewModel(
                 _state.value = ViolationDetailsState(
                     title = violation.getViolationName(),
                     trace = violation.getTraceString(),
+                    highlightedTrace = defineHighlightedTrace(violation),
                     strictProViolation = violation,
                 )
             }
@@ -54,18 +57,25 @@ internal class ViolationDetailsViewModel(
         }
     }
 
-    private fun StrictProViolation.getTraceString(): List<String> {
-        return if (VERSION.SDK_INT >= VERSION_CODES.P) {
-            violation.stackTrace
-                .map { it.toString() }
-        } else {
-            emptyList()
-        }
+    private fun defineHighlightedTrace(violation: StrictProViolation): Set<String> {
+        return filterStackTraceUseCase.execute(violation.violation.stackTrace)
+            .map { it.toString() }
+            .toSet()
+    }
+}
+
+private fun StrictProViolation.getTraceString(): List<String> {
+    return if (VERSION.SDK_INT >= VERSION_CODES.P) {
+        violation.stackTrace
+            .map { it.toString() }
+    } else {
+        emptyList()
     }
 }
 
 internal data class ViolationDetailsState(
     val title: String = "",
     val trace: List<String> = emptyList(),
+    val highlightedTrace: Set<String> = emptySet(),
     val strictProViolation: StrictProViolation? = null,
 )

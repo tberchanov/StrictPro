@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Setup CI/CD with GitHub Actions.
 - Run `check-changelog` only on `pull_request`.
 - Created `strictpro-stubs`, `strictpro-ui-stubs`.
+- Highlight stacktrace items on detail screen.
 
 ### Fixed
 
