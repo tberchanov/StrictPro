@@ -3,7 +3,13 @@ package com.strictpro.ui
 import com.strictpro.StrictPro
 import java.util.concurrent.Executor
 
-class StrictProUiPenaltyListener
+class StrictProUiPenaltyListener {
+    companion object {
+        fun create(): StrictProUiPenaltyListener {
+            return StrictProUiPenaltyListener()
+        }
+    }
+}
 
 fun StrictPro.VmPolicy.Builder.penaltyListener(
     executor: Executor,
