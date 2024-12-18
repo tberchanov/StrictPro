@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
@@ -34,15 +36,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.strictpro.StrictPro
 import com.strictpro.example.ui.theme.StrictProTheme
+import com.strictpro.ui.presentation.ui.StrictProUiActivity
 import kotlin.concurrent.thread
 
 const val TAG = "StrictProApp"
 
 private val ThreadPolicyColor = Color.Blue.copy(blue = 0.5f)
 private val VmPolicyColor = Color.Green.copy(green = 0.5f)
+private val StrictProUIColor = Color(0xFFE63946)
 
 @Composable
-fun ExampleContent(
+fun ContentScreen(
     threadPolicy: StrictPro.ThreadPolicy = buildDefaultThreadPolicy(LocalContext.current),
     vmPolicy: StrictPro.VmPolicy = buildDefaultVmPolicy(LocalContext.current),
 ) {
@@ -59,7 +63,8 @@ fun ExampleContent(
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -77,6 +82,21 @@ fun ExampleContent(
                             color = Color.White,
                             textAlign = TextAlign.Center,
                         )
+                    }
+                    val context = LocalContext.current
+                    Button(
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        onClick = {
+                            context.startActivity(
+                                Intent(
+                                    context,
+                                    StrictProUiActivity::class.java,
+                                )
+                            )
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = StrictProUIColor),
+                    ) {
+                        Text("Open StrictPro UI")
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("ThreadPolicy")
@@ -97,7 +117,6 @@ fun ExampleContent(
                                 }
                             })
                     }
-                    val context = LocalContext.current
                     ThreadPolicyButton(R.string.Trigger_DiskReadViolation) {
                         performPrefsEdit(context)
                     }
@@ -191,5 +210,5 @@ fun VmPolicyButton(textRes: Int, action: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewComposeContent() {
-    ExampleContent()
+    ContentScreen()
 }

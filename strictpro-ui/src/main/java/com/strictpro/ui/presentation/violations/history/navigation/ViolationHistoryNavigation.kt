@@ -1,6 +1,5 @@
 package com.strictpro.ui.presentation.violations.history.navigation
 
-import android.os.strictmode.Violation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -8,7 +7,6 @@ import androidx.navigation.toRoute
 import com.strictpro.ui.R
 import com.strictpro.ui.domain.model.ViolationType
 import com.strictpro.ui.presentation.ui.navigation.BottomNavigationRoute
-import com.strictpro.ui.presentation.violations.history.model.ViolationHistoryItemUI
 import com.strictpro.ui.presentation.violations.history.ui.HistoryScreen
 import kotlinx.serialization.Serializable
 
