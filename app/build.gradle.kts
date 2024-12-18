@@ -64,13 +64,14 @@ dependencies {
 
     debugImplementation(project(":strictpro"))
     releaseImplementation(project(":strictpro-stubs"))
-
     debugImplementation(project(":strictpro-ui"))
     releaseImplementation(project(":strictpro-ui-stubs"))
 
-//    val libVersion = "0.1.0-preview.1"
-//    implementation("com.github.tberchanov.StrictPro:strictpro:$libVersion")
-//    implementation("com.github.tberchanov.StrictPro:strictpro.ui:$libVersion")
+//    val libVersion = "0.1.0-preview.2"
+//    debugImplementation("com.github.tberchanov.StrictPro:strictpro:$libVersion")
+//    debugImplementation("com.github.tberchanov.StrictPro:strictpro.ui:$libVersion")
+//    releaseImplementation("com.github.tberchanov.StrictPro:strictpro.stubs:$libVersion")
+//    releaseImplementation("com.github.tberchanov.StrictPro:strictpro.ui.stubs:$libVersion")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.mockk)
