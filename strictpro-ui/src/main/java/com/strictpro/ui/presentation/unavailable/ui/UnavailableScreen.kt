@@ -47,7 +47,7 @@ internal fun UnavailableScreen() {
             textAlign = TextAlign.Center,
         )
         Text(
-            "Or check violations using various penalties\n(Log, Death, etc.)",
+            stringResource(R.string.use_various_penalties),
             textAlign = TextAlign.Center,
             color = Color.White,
         )
@@ -59,14 +59,14 @@ internal fun UnavailableScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                "Why?",
+                stringResource(R.string.why),
                 modifier = Modifier.padding(bottom = 8.dp),
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 textAlign = TextAlign.Center,
             )
             Text(
-                "On versions below API level 28 the ability to listen for violations is not available, and thus it is not possible to display violations on the UI.",
+                stringResource(R.string.why_unavailable_below_28),
                 modifier = Modifier.padding(bottom = 8.dp),
                 color = Color.White,
                 textAlign = TextAlign.Center,

@@ -24,9 +24,10 @@ import kotlin.concurrent.thread
 private val mainExecutor = ExecutorCompat.create(Handler(Looper.getMainLooper()))
 
 fun buildDefaultThreadPolicy(context: Context) = StrictPro.ThreadPolicy.Builder()
+    .detectExplicitGc()
     .detectAll()
     .penaltyLog()
-//    .penaltyDialog()
+    .penaltyDialog()
     .penaltyFlashScreen()
     .setWhiteList {
 
@@ -40,7 +41,7 @@ fun buildDefaultThreadPolicy(context: Context) = StrictPro.ThreadPolicy.Builder(
 fun buildDefaultVmPolicy(context: Context) = StrictPro.VmPolicy.Builder()
     .detectAll()
     .penaltyLog()
-//    .penaltyDialog()
+    .penaltyDialog()
     .penaltyFlashScreen()
     .penaltyListener(mainExecutor, StrictProUiPenaltyListener.create())
     .setWhiteList {

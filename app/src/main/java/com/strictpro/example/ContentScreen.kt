@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -77,8 +78,7 @@ fun ContentScreen(
                         Text(
                             modifier = Modifier
                                 .padding(20.dp),
-                            text = "It is example app to demonstrate StrictPro library.\n\n" +
-                                "You can  trigger different violations by clicking on buttons below.",
+                            text = stringResource(R.string.example_app_description),
                             color = Color.White,
                             textAlign = TextAlign.Center,
                         )
@@ -96,10 +96,10 @@ fun ContentScreen(
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = StrictProUIColor),
                     ) {
-                        Text("Open StrictPro UI")
+                        Text(stringResource(R.string.open_strictpro_ui))
                     }
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("ThreadPolicy")
+                        Text(stringResource(R.string.thread_policy))
                         Box(modifier = Modifier.width(8.dp))
                         var threadPolicyEnabled by remember { mutableStateOf(true) }
                         Switch(
@@ -134,7 +134,7 @@ fun ContentScreen(
                     }
                     Box(Modifier.height(12.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("VmPolicy")
+                        Text(stringResource(R.string.vm_policy))
                         Box(modifier = Modifier.width(8.dp))
                         var vmPolicyEnabled by remember { mutableStateOf(true) }
                         Switch(

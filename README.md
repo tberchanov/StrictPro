@@ -1,7 +1,7 @@
 <h1 align="center">StrictPro 🚀</h1>
-</br>
+<br>
 
-**StrictPro** is a powerful library designed to extend and improve Android's [StrictMode](https://developer.android.com/reference/android/os/StrictMode.html) by offering more flexibility, better error handling, and enhanced UI for violations. It addresses some of the common limitations developers face with StrictMode.
+**StrictPro** is a powerful library designed to extend and improve Android's [StrictMode](https://developer.android.com/reference/android/os/StrictMode.html) by offering more flexibility and informative UI for violations. It addresses some of the common limitations developers face with StrictMode.
 
 ## Why Use StrictPro? 🤔
 
@@ -19,17 +19,21 @@ Add StrictPro to your project by including the following in your `build.gradle.k
 
 ```kotlin
 android {
+    compileSdk = 35
     defaultConfig {
+        targetSdk = 35
         minSdk = 21 // Required minimum API is 21
     }
 }
 
 dependencies {    
-    implementation("com.github.tberchanov:StrictPro:0.0.2")
+    val libVersion = "1.0.0"
+    debugImplementation("com.github.tberchanov.StrictPro:strictpro:$libVersion")
+    releaseImplementation("com.github.tberchanov.StrictPro:strictpro.stubs:$libVersion")
 }
 ```
 
-Ensure the following in your `settings.gradle.kts`:
+Ensure the JitPack repository is declared in your `settings.gradle.kts`:
 ```kotlin
 dependencyResolutionManagement {
     repositories {
@@ -37,6 +41,10 @@ dependencyResolutionManagement {
     }
 }
 ```
+
+`strictpro.stubs` library contains empty implementation of the public library interface. Additionally, it is not containing 3rd party dependencies, so consumer app will not get transitive dependencies, which may impact the app size.
+
+It is recommended to use `strictpro.stubs` for production builds.
 
 Usage Example 💻
 ------
@@ -68,7 +76,7 @@ class MainApplication: Application() {
         StrictPro.setThreadPolicy(
             StrictPro.ThreadPolicy.Builder()
                 .detectAll()
-                .detectExplicitGc() // Call requires API level 34
+                .detectExplicitGc() // Call requires API level 34 or higher, otherwise it will be ignored.
                 .penaltyLog()
                 .penaltyDialog()
                 .penaltyFlashScreen()
@@ -90,6 +98,29 @@ class MainApplication: Application() {
 }
 ```
 
+StrictProUI ✨
+------
+
+StrictProUI is the additional library that displays all StrictMode violations happened in your application.
+
+<img src="./img/StrictProUI.png" />
+
+There are the ways to open StrictProUI:
+- Use shortcut that appears on long press on you application launcher icon. 
+- Click StrictPro launcher icon with the same icon as your application. 
+- Programatically open `StrictProUiActivity` from your application dev settings.
+
+To setup StrictProUI:
+```kotlin
+dependencies {    
+    val libVersion = "1.0.0"
+    debugImplementation("com.github.tberchanov.StrictPro:strictpro.ui:$libVersion")
+    releaseImplementation("com.github.tberchanov.StrictPro:strictpro.ui.stubs:$libVersion")
+}
+```
+
+Sample `app` 📱
+------
 Run the sample `app` to trigger StrictMode violations and explore StrictPro’s features.
 
 <img src="./img/strict-pro-example.gif" width="300" />
