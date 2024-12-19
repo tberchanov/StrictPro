@@ -13,4 +13,7 @@
     <string name="that_is_good">That is good 😎</string>
     <string name="current_api_format">Current device API level is %d</string>
     <string name="please_run_above_api_28">Please run the app on a device\nwith API level 28 or above.</string>
+    <string name="use_various_penalties">Or check violations using various penalties(Log, Death, etc.)</string>
+    <string name="why">Why?</string>
+    <string name="why_unavailable_below_28">On versions below API level 28 the ability to listen for violations is not available, and thus it is not possible to display violations on the UI.</string>
 </resources>

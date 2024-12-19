@@ -69,8 +69,8 @@ dependencies {
 
 //    val libVersion = "0.1.0-preview.2"
 //    debugImplementation("com.github.tberchanov.StrictPro:strictpro:$libVersion")
-//    debugImplementation("com.github.tberchanov.StrictPro:strictpro.ui:$libVersion")
 //    releaseImplementation("com.github.tberchanov.StrictPro:strictpro.stubs:$libVersion")
+//    debugImplementation("com.github.tberchanov.StrictPro:strictpro.ui:$libVersion")
 //    releaseImplementation("com.github.tberchanov.StrictPro:strictpro.ui.stubs:$libVersion")
 
     testImplementation(libs.junit)

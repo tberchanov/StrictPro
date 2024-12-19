@@ -9,18 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
--
+- 
 
 ### Added
 
-- Setup CI/CD with GitHub Actions.
-- Run `check-changelog` only on `pull_request`.
-- Created `strictpro-stubs`, `strictpro-ui-stubs`.
-- Highlight stacktrace items on detail screen.
+- 
 
 ### Fixed
 
-- Fixed UI in StrictProUI.
+- 
 
 ### Removed
 
@@ -28,4 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0]
 
-- 
+### Added
+- Setup CI/CD with GitHub Actions.
+- Run `check-changelog` only on `pull_request`.
+- Created `strictpro-stubs`, `strictpro-ui-stubs`.
+- Highlight stacktrace items on detail screen.
+
+### Fixed
+- Fixed UI in StrictProUI.
