@@ -3,6 +3,8 @@
 
 **StrictPro** is a powerful library designed to extend and improve Android's [StrictMode](https://developer.android.com/reference/android/os/StrictMode.html) by offering more flexibility and informative UI for violations. It addresses some of the common limitations developers face with StrictMode.
 
+<img src="./img/strict-pro-cover.png" />
+
 ## Why Use StrictPro? 🤔
 
 StrictMode is an important tool for catching common mistakes in Android development. However, developers often encounter the following issues:
